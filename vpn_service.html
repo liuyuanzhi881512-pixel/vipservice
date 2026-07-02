@@ -14,13 +14,42 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* ===== 精简 Banner ===== */
+    .hero {
+      margin: 0 16px 12px;
+      padding: 18px 16px 14px;
+      background: linear-gradient(135deg, #3A3530, #2D2A26);
+      border-radius: 16px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -15px; right: -8px;
+      width: 100px; height: 90px;
+      background:
+        linear-gradient(135deg, transparent 40%, rgba(212,168,76,0.12) 46%, rgba(232,201,126,0.22) 50%, rgba(255,235,180,0.08) 54%, transparent 60%);
+      clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+    }
+    .hero-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.4;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-emoji { font-size: 20px; margin-right: 4px; }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       background-color: #F0EAE4;
       min-height: 100dvh;
       color: #333;
       overscroll-behavior: none;
-      padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
+      padding-top: calc(env(safe-area-inset-top) + 10px);
     }
 
     /* ===== 场景卡片网格 ===== */
@@ -278,6 +307,11 @@
   <div class="toast" id="toast"></div>
 
   <div class="page-wrap">
+
+    <!-- 精简 Banner -->
+    <div class="hero">
+      <div class="hero-title"><span class="hero-emoji">🌐</span>翻墙服务 · 专员帮您解决</div>
+    </div>
 
     <!-- 场景列表 -->
     <section class="scene-section">
