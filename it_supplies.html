@@ -202,6 +202,15 @@
       flex-direction: column;
     }
 
+    .stock-card-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
+      background: #f7f4f0;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
     .stock-card.selected {
       border-color: #D4A84C;
       background: #FFFDF5;
@@ -606,141 +615,174 @@
       <div class="section-title">库内现货 <span>（当日可取，点击申领）</span></div>
 
       <!-- 硬盘盒 -->
-      <div class="stock-cat collapsed">
+      <div class="stock-cat">
         <div class="cat-title">硬盘盒<span class="cat-arrow">▾</span></div>
         <div class="stock-scroll-wrap"><div class="stock-scroll">
-          <div class="stock-card" data-item="绿联移动硬盘盒 M2">          <div class="stock-card-name">绿联 M2 硬盘盒</div>
+          <div class="stock-card" data-item="绿联移动硬盘盒 M2">
+          <img class="stock-card-img" src="images/greenunion-m2-enclosure.jpg" loading="lazy" alt="绿联移动硬盘盒 M2">          <div class="stock-card-name">绿联 M2 硬盘盒</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="绿联移动硬盘盒 SATA">          <div class="stock-card-name">绿联 SATA 硬盘盒</div>
+          <div class="stock-card" data-item="绿联移动硬盘盒 SATA">
+          <img class="stock-card-img" src="images/greenunion-sata-enclosure.jpg" loading="lazy" alt="绿联移动硬盘盒 SATA">          <div class="stock-card-name">绿联 SATA 硬盘盒</div>
             <div class="stock-card-tag">有现货</div>
           </div>
         </div></div>
       </div>
 
       <!-- 线材 -->
-      <div class="stock-cat collapsed">
+      <div class="stock-cat">
         <div class="cat-title">线材<span class="cat-arrow">▾</span></div>
         <div class="stock-scroll-wrap"><div class="stock-scroll">
-          <div class="stock-card" data-item="绿联 Type-C 数据线 100W">          <div class="stock-card-name">Type-C 数据线 100W</div>
+          <div class="stock-card" data-item="绿联 Type-C 数据线 100W">
+          <img class="stock-card-img" src="images/greenunion-typec-cable-100w.png" loading="lazy" alt="绿联 Type-C 数据线 100W">          <div class="stock-card-name">Type-C 数据线 100W</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="倍思三合一快充线">          <div class="stock-card-name">倍思三合一快充线</div>
+          <div class="stock-card" data-item="倍思三合一快充线">
+          <img class="stock-card-img" src="images/baseus-3in1-cable.jpg" loading="lazy" alt="倍思三合一快充线">          <div class="stock-card-name">倍思三合一快充线</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="制糖工厂 磁吸贴贴线 240W C-C">          <div class="stock-card-name">制糖工厂 磁吸贴贴线</div>
+          <div class="stock-card" data-item="制糖工厂 磁吸贴贴线 240W C-C">
+          <img class="stock-card-img" src="images/zhitang-magsafe-cable.jpg" loading="lazy" alt="制糖工厂 磁吸贴贴线 240W C-C">          <div class="stock-card-name">制糖工厂 磁吸贴贴线</div>
             <div class="stock-card-tag">有现货</div>
           </div>
         </div></div>
       </div>
 
       <!-- 支架 -->
-      <div class="stock-cat collapsed">
+      <div class="stock-cat">
         <div class="cat-title">支架<span class="cat-arrow">▾</span></div>
         <div class="stock-scroll-wrap"><div class="stock-scroll">
-          <div class="stock-card" data-item="联想 异能者笔记本支架">          <div class="stock-card-name">联想 笔记本支架</div>
+          <div class="stock-card" data-item="联想 异能者笔记本支架">
+          <img class="stock-card-img" src="images/lenovo-laptop-stand.jpg" loading="lazy" alt="联想 异能者笔记本支架">          <div class="stock-card-name">联想 笔记本支架</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="KU XIU iPad 磁吸支架 11英寸">          <div class="stock-card-name">KU XIU iPad 支架 11"</div>
+          <div class="stock-card" data-item="KU XIU iPad 磁吸支架 11英寸">
+          <img class="stock-card-img" src="images/kuxiu-ipad-stand-11.jpg" loading="lazy" alt="KU XIU iPad 磁吸支架 11英寸">          <div class="stock-card-name">KU XIU iPad 支架 11"</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="KU XIU iPad 磁吸支架 13英寸">          <div class="stock-card-name">KU XIU iPad 支架 13"</div>
+          <div class="stock-card" data-item="KU XIU iPad 磁吸支架 13英寸">
+          <img class="stock-card-img" src="images/kuxiu-ipad-stand-13.jpg" loading="lazy" alt="KU XIU iPad 磁吸支架 13英寸">          <div class="stock-card-name">KU XIU iPad 支架 13"</div>
             <div class="stock-card-tag">有现货</div>
           </div>
         </div></div>
       </div>
 
       <!-- 存储 -->
-      <div class="stock-cat collapsed">
+      <div class="stock-cat">
         <div class="cat-title">存储<span class="cat-arrow">▾</span></div>
         <div class="stock-scroll-wrap"><div class="stock-scroll">
-          <div class="stock-card" data-item="梵想 2TB SSD 固态硬盘 M.2">          <div class="stock-card-name">梵想 2TB SSD M.2</div>
+          <div class="stock-card" data-item="梵想 2TB SSD 固态硬盘 M.2">
+          <img class="stock-card-img" src="images/fanxiang-2tb-ssd.jpg" loading="lazy" alt="梵想 2TB SSD 固态硬盘 M.2">          <div class="stock-card-name">梵想 2TB SSD M.2</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="联想 256G U盘 双头">          <div class="stock-card-name">联想 256G U盘 双头</div>
+          <div class="stock-card" data-item="联想 256G U盘 双头">
+          <img class="stock-card-img" src="images/lenovo-256g-usb.jpg" loading="lazy" alt="联想 256G U盘 双头">          <div class="stock-card-name">联想 256G U盘 双头</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="联想 32GB U盘">          <div class="stock-card-name">联想 32GB U盘</div>
+          <div class="stock-card" data-item="联想 32GB U盘">
+          <img class="stock-card-img" src="images/lenovo-32g-usb.jpg" loading="lazy" alt="联想 32GB U盘">          <div class="stock-card-name">联想 32GB U盘</div>
             <div class="stock-card-tag">有现货</div>
           </div>
         </div></div>
       </div>
 
       <!-- 外设 -->
-      <div class="stock-cat collapsed">
+      <div class="stock-cat">
         <div class="cat-title">外设<span class="cat-arrow">▾</span></div>
         <div class="stock-scroll-wrap"><div class="stock-scroll">
-          <div class="stock-card" data-item="雷柏 无线/蓝牙多模键鼠套装">          <div class="stock-card-name">雷柏 键鼠套装</div>
+          <div class="stock-card" data-item="雷柏 无线/蓝牙多模键鼠套装">
+          <img class="stock-card-img" src="images/rapoo-keyboard-mouse.jpg" loading="lazy" alt="雷柏 无线/蓝牙多模键鼠套装">          <div class="stock-card-name">雷柏 键鼠套装</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="罗技 MX Anywhere 3S 无线鼠标">          <div class="stock-card-name">罗技 MX Anywhere 3S</div>
+          <div class="stock-card" data-item="罗技 MX Anywhere 3S 无线鼠标">
+          <img class="stock-card-img" src="images/logitech-mx-anywhere-3s.jpg" loading="lazy" alt="罗技 MX Anywhere 3S 无线鼠标">          <div class="stock-card-name">罗技 MX Anywhere 3S</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="绿联 WiFi6 USB 无线网卡">          <div class="stock-card-name">绿联 WiFi6 无线网卡</div>
+          <div class="stock-card" data-item="绿联 WiFi6 USB 无线网卡">
+          <img class="stock-card-img" src="images/greenunion-wifi6-adapter.jpg" loading="lazy" alt="绿联 WiFi6 USB 无线网卡">          <div class="stock-card-name">绿联 WiFi6 无线网卡</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="绿联读卡器">          <div class="stock-card-name">绿联 读卡器</div>
+          <div class="stock-card" data-item="绿联读卡器">          <img class="stock-card-img" src="images/greenunion-card-reader.webp" loading="lazy" alt="绿联读卡器">
+          <div class="stock-card-name">绿联 读卡器</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="AOC 黑色鼠标垫 800*300">          <div class="stock-card-name">AOC 鼠标垫 800*300</div>
+          <div class="stock-card" data-item="AOC 黑色鼠标垫 800*300">
+          <img class="stock-card-img" src="images/aoc-mousepad.jpg" loading="lazy" alt="AOC 黑色鼠标垫 800*300">          <div class="stock-card-name">AOC 鼠标垫 800*300</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="绿联 USB 蓝牙适配器">          <div class="stock-card-name">绿联 蓝牙适配器</div>
+          <div class="stock-card" data-item="绿联 USB 蓝牙适配器">
+          <img class="stock-card-img" src="images/greenunion-bluetooth-adapter.jpg" loading="lazy" alt="绿联 USB 蓝牙适配器">          <div class="stock-card-name">绿联 蓝牙适配器</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="雷柏 M300G 双模无线鼠标">          <div class="stock-card-name">雷柏 M300G 鼠标</div>
+          <div class="stock-card" data-item="雷柏 M300G 双模无线鼠标">
+          <img class="stock-card-img" src="images/rapoo-m300g-mouse.jpg" loading="lazy" alt="雷柏 M300G 双模无线鼠标">          <div class="stock-card-name">雷柏 M300G 鼠标</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="ikbc W200 红轴 87键 绿色">          <div class="stock-card-name">ikbc W200 红轴 87键</div>
+          <div class="stock-card" data-item="ikbc W200 红轴 87键 绿色">
+          <img class="stock-card-img" src="images/ikbc-w200-keyboard.jpg" loading="lazy" alt="ikbc W200 红轴 87键 绿色">          <div class="stock-card-name">ikbc W200 红轴 87键</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="倍思 Macbook Pro 磁吸防窥膜 14英寸">          <div class="stock-card-name">倍思 磁吸防窥膜 14"</div>
+          <div class="stock-card" data-item="倍思 Macbook Pro 磁吸防窥膜 14英寸">
+          <img class="stock-card-img" src="images/baseus-privacy-filter-14.jpg" loading="lazy" alt="倍思 Macbook Pro 磁吸防窥膜 14英寸">          <div class="stock-card-name">倍思 磁吸防窥膜 14"</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="宝利通无线耳机">          <div class="stock-card-name">宝利通 无线耳机</div>
+          <div class="stock-card" data-item="宝利通无线耳机">
+          <img class="stock-card-img" src="images/poly-headset.jpg" loading="lazy" alt="宝利通无线耳机">          <div class="stock-card-name">宝利通 无线耳机</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="灵耀魔方 WiFi7 分布式子母路由器">          <div class="stock-card-name">灵耀魔方 WiFi7 路由器</div>
+          <div class="stock-card" data-item="灵耀魔方 WiFi7 分布式子母路由器">
+          <img class="stock-card-img" src="images/asus-zenwifi-router.jpg" loading="lazy" alt="灵耀魔方 WiFi7 分布式子母路由器">          <div class="stock-card-name">灵耀魔方 WiFi7 路由器</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="安克 250W 充电基站">          <div class="stock-card-name">安克 250W 充电基站</div>
+          <div class="stock-card" data-item="安克 250W 充电基站">
+          <img class="stock-card-img" src="images/anker-250w-charger.png" loading="lazy" alt="安克 250W 充电基站">          <div class="stock-card-name">安克 250W 充电基站</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="罗技 GPW4代 朱雀 极影黑">          <div class="stock-card-name">罗技 GPW4 朱雀 极影黑</div>
+          <div class="stock-card" data-item="罗技 GPW4代 朱雀 极影黑">
+          <img class="stock-card-img" src="images/logitech-gpw4-mouse.png" loading="lazy" alt="罗技 GPW4代 朱雀 极影黑">          <div class="stock-card-name">罗技 GPW4 朱雀 极影黑</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="罗技 MX Anywhere 3S 无线鼠标">          <div class="stock-card-name">罗技 MX Anywhere 3S</div>
+          <div class="stock-card" data-item="罗技 MX Anywhere 3S 无线鼠标">
+          <img class="stock-card-img" src="images/logitech-mx-anywhere-3s.jpg" loading="lazy" alt="罗技 MX Anywhere 3S 无线鼠标">          <div class="stock-card-name">罗技 MX Anywhere 3S</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="妙联宝 293 V3.0 黑色中文版">          <div class="stock-card-name">妙联宝 293 V3.0 中文版</div>
+          <div class="stock-card" data-item="妙联宝 293 V3.0 黑色中文版">
+          <img class="stock-card-img" src="images/miaolianbao-293.jpg" loading="lazy" alt="妙联宝 293 V3.0 黑色中文版">          <div class="stock-card-name">妙联宝 293 V3.0 中文版</div>
             <div class="stock-card-tag">有现货</div>
           </div>
         </div></div>
       </div>
 
       <!-- 充电设备 -->
-      <div class="stock-cat collapsed">
+      <div class="stock-cat">
         <div class="cat-title">充电设备<span class="cat-arrow">▾</span></div>
         <div class="stock-scroll-wrap"><div class="stock-scroll">
-          <div class="stock-card" data-item="安克 MagSafe 磁吸充电宝 10000毫安">          <div class="stock-card-name">安克 磁吸充电宝 10000mAh</div>
+          <div class="stock-card" data-item="安克 MagSafe 磁吸充电宝 10000毫安">
+          <img class="stock-card-img" src="images/anker-magsafe-powerbank.jpg" loading="lazy" alt="安克 MagSafe 磁吸充电宝 10000毫安">          <div class="stock-card-name">安克 磁吸充电宝 10000mAh</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="雷士电工 全球旅行插头">          <div class="stock-card-name">雷士 全球旅行插头</div>
+          <div class="stock-card" data-item="雷士电工 全球旅行插头">
+          <img class="stock-card-img" src="images/nvc-travel-adapter.png" loading="lazy" alt="雷士电工 全球旅行插头">          <div class="stock-card-name">雷士 全球旅行插头</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="酷态科 6号充电宝 6000毫安">          <div class="stock-card-name">酷态科 6号充电宝 6000mAh</div>
+          <div class="stock-card" data-item="酷态科 6号充电宝 6000毫安">
+          <img class="stock-card-img" src="images/cute-6-powerbank.jpg" loading="lazy" alt="酷态科 6号充电宝 6000毫安">          <div class="stock-card-name">酷态科 6号充电宝 6000mAh</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="酷态科 15号快充头 140W">          <div class="stock-card-name">酷态科 15号快充头 140W</div>
+          <div class="stock-card" data-item="酷态科 15号快充头 140W">
+          <img class="stock-card-img" src="images/cute-15-charger-140w.jpg" loading="lazy" alt="酷态科 15号快充头 140W">          <div class="stock-card-name">酷态科 15号快充头 140W</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="Aresh 磁吸三合一无线充电器">          <div class="stock-card-name">Aresh 磁吸三合一充电器</div>
+          <div class="stock-card" data-item="Aresh 磁吸三合一无线充电器">
+          <img class="stock-card-img" src="images/aresh-3in1-charger.webp" loading="lazy" alt="Aresh 磁吸三合一无线充电器">          <div class="stock-card-name">Aresh 磁吸三合一充电器</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="KU XIU qi2 认证苹果三合一无线充电器">          <div class="stock-card-name">KU XIU qi2 三合一充电器</div>
+          <div class="stock-card" data-item="KU XIU qi2 认证苹果三合一无线充电器">
+          <img class="stock-card-img" src="images/kuxiu-qi2-charger.jpg" loading="lazy" alt="KU XIU qi2 认证苹果三合一无线充电器">          <div class="stock-card-name">KU XIU qi2 三合一充电器</div>
             <div class="stock-card-tag">有现货</div>
           </div>
-          <div class="stock-card" data-item="奥睿科 便捷排插/USB插座/口袋插排">          <div class="stock-card-name">奥睿科 口袋插排</div>
+          <div class="stock-card" data-item="奥睿科 便捷排插/USB插座/口袋插排">
+          <img class="stock-card-img" src="images/orico-power-strip.jpg" loading="lazy" alt="奥睿科 便捷排插/USB插座/口袋插排">          <div class="stock-card-name">奥睿科 口袋插排</div>
             <div class="stock-card-tag">有现货</div>
           </div>
         </div></div>
