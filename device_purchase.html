@@ -336,16 +336,16 @@
   .form-group input::placeholder,
   .form-group textarea::placeholder { color: #bbb; }
   .form-group textarea {
-    resize: vertical;
-    min-height: 130px;
+    resize: none;
+    min-height: 150px;
     line-height: 1.5;
   }
-  .textarea-wrapper { position: relative; overflow: hidden; }
+  .textarea-wrapper { position: relative; overflow: hidden; min-height: 150px; }
   .guide-overlay {
-    position: absolute; left: 14px; top: 13px; right: 0;
+    position: absolute; left: 14px; top: 13px; right: 14px;
     color: #bbb; font-size: 14px; line-height: 1.5; pointer-events: none;
     white-space: pre-wrap; word-break: break-word;
-    bottom: 0;
+    bottom: 13px;
   }
   .form-group select option { background: #fff; }
 
