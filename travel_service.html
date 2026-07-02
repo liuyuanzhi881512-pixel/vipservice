@@ -168,7 +168,7 @@
     color:#c0b8a8;font-size:14px;line-height:1.5;pointer-events:none;
     white-space:pre-wrap;word-break:break-word;
   }
-  .trip-textarea { min-height:132px; }
+  textarea.trip-textarea { min-height:180px !important; resize:none !important; }
 
   /* 提交按钮 */
   .submit-area { padding:4px 0; }
@@ -253,20 +253,12 @@
       </div>
     </div>
 
-    <!-- 行程简述 -->
+    <!-- 行程与需求 -->
     <div class="form-group">
-      <label>行程简述<span class="required">*</span></label>
+      <label>行程与需求<span class="required">*</span></label>
       <div class="textarea-wrapper">
-        <textarea class="form-input trip-textarea" id="tripInfo" placeholder=""></textarea>
-        <div class="guide-overlay" id="tripGuide">例如：7.15在香港(机场)，7.15~7.22在日本，7.22在香港(落地)
-例如：7.15～7.22在日本，飞机起降都在香港机场</div>
+        <textarea class="form-input trip-textarea" id="tripInfo" placeholder="请简单描述您的行程与需求&#10;例如：7.15在香港(机场)，7.15~7.22在日本，7.22在香港(落地)&#10;&#10;其他备注（选填）：特殊需求、品牌偏好等"></textarea>
       </div>
-    </div>
-
-    <!-- 其他备注 -->
-    <div class="form-group">
-      <label>其他备注</label>
-      <textarea class="form-input" id="remark" placeholder="特殊需求、品牌偏好等（选填）"></textarea>
     </div>
   </div>
 
@@ -275,8 +267,6 @@
     <button class="submit-btn" onclick="submitForm()">通知专员</button>
   </div>
 
-  <div class="footer">8000VIP 服务专线 · 专员将在 15 分钟内联系您</div>
-</div>
 
 <div class="toast" id="toast"></div>
 
@@ -381,16 +371,6 @@
     });
   }
 
-  // 行程简述浮层引导
-  (function() {
-    const ta = document.getElementById('tripInfo');
-    const guide = document.getElementById('tripGuide');
-    if (ta && guide) {
-      ta.addEventListener('focus', () => { guide.style.display = 'none'; });
-      ta.addEventListener('blur', () => { if (!ta.value.trim()) guide.style.display = ''; });
-    }
-  })();
-
   function selectQtyBtn(row, idx, val) {
     row.querySelectorAll('.qty-option').forEach(b => b.classList.remove('active'));
     const target = row.querySelector('.qty-option[data-val="' + val + '"]');
@@ -409,15 +389,13 @@
   async function submitForm() {
     if (selectedItems.length === 0) return showToast('请至少选择一项物品');
     const tripInfo = document.getElementById('tripInfo').value.trim();
-    if (!tripInfo) return showToast('请填写行程简述');
+    if (!tripInfo) return showToast('请填写行程与需求');
 
     const itemsText = selectedItems.map(i => `• ${i.name} × ${i.qty}`).join('\n');
-    const remark = document.getElementById('remark').value.trim();
 
     const payload = {
       itemsText,
       tripInfo,
-      remark,
       time: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })
     };
 
@@ -448,14 +426,13 @@
   }
 
   function buildWeComMsg(p) {
-    const extra = p.remark ? '\n📋 备注：' + p.remark : '';
     const text =
 `【境外差旅服务申请】
 ━━━━━━━━━━━━━━
 📦 申请物品：
 ${p.itemsText}
 ━━━━━━━━━━━━━━
-✈️ ${p.tripInfo}${extra}
+✈️ ${p.tripInfo}
 ━━━━━━━━━━━━━━
 ⏰ 申请时间：${p.time}`;
     return { msgtype: 'text', text: { content: text } };
@@ -474,7 +451,6 @@ ${p.itemsText}
     selectedItems = [];
     renderSelectedList();
     document.getElementById('tripInfo').value = '';
-    document.getElementById('remark').value = '';
     const btn = document.querySelector('.submit-btn');
     btn.disabled = false; btn.textContent = '通知专员';
   }
