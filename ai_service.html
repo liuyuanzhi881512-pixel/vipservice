@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>AI 服务咨询 - 8000VIP服务</title>
+  <style>
+    * {
+      margin:0;
+      padding:0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background-color: #F0EAE4;
+      min-height: 100dvh;
+      color: #333;
+      overscroll-behavior: none;
+      padding-top: calc(env(safe-area-inset-top) + 20px);
+      padding-bottom: env(safe-area-inset-bottom);
+      font-size: 16px;
+    }
+
+    /* ===== 白卡片容器 ===== */
+    .section-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 16px 14px 14px;
+      margin: 10px 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+
+    /* ===== 产品选择（第一步，紧凑） ===== */
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .product-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #FAF8F5;
+      border: 2px solid #E8E2DA;
+      border-radius: 14px;
+      padding: 12px 8px 10px;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      -webkit-touch-callout: none;
+      user-select: none;
+      text-align: center;
+      min-height: 56px;
+    }
+    .product-card:active { transform: scale(0.97); }
+    .product-card.selected {
+      border-color: #D4A84C;
+      background: #FFFDF5;
+      box-shadow: 0 2px 12px rgba(212,168,76,0.15);
+    }
+
+    .product-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #3A3530;
+      line-height: 1.4;
+    }
+
+    /* 虚线更多 */
+    .product-card.dashed {
+      border-style: dashed;
+      border-color: #D8D0C4;
+      background: #fff;
+    }
+    .product-card.dashed .product-name {
+      color: #A09888;
+      font-weight: 500;
+    }
+
+    /* ===== 问题列表（第二步） ===== */
+    .item-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .item-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #FAF8F5;
+      border: 2px solid #E8E2DA;
+      border-radius: 13px;
+      padding: 14px 6px;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      -webkit-touch-callout: none;
+      user-select: none;
+      text-align: center;
+      min-height: 56px;
+      overflow: hidden;
+    }
+    .item-card:active { transform: scale(0.96); }
+    .item-card.selected {
+      border-color: #D4A84C;
+      background: #FFFDF5;
+      box-shadow: 0 2px 12px rgba(212,168,76,0.15);
+    }
+    .item-card.selected .card-text {
+      color: #D4A84C;
+    }
+
+    .item-card .card-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #3A3530;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-card.dashed {
+      border-style: dashed;
+      border-color: #D8D0C4;
+    }
+    .item-card.dashed .card-text {
+      color: #A09888;
+      font-weight: 500;
+    }
+
+    /* ===== 表单卡片（强化为焦点） ===== */
+    .form-section {
+      padding: 4px 14px 20px;
+    }
+
+    .form-card {
+      position: relative;
+      background: #fff;
+      border: 1.5px solid #E8E2DA;
+      border-radius: 18px;
+      padding: 28px 22px 24px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #D4A84C, #E8C97E);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #7A7068;
+      margin-bottom: 6px;
+    }
+    .form-group label .required {
+      color: #E85A5A;
+      margin-left: 2px;
+    }
+
+    /* 文本框 + 浮层引导 */
+    .textarea-wrapper {
+      position: relative;
+      border: 2px solid #E8E2DA;
+      border-radius: 12px;
+      background: #FAF8F5;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      min-height: 180px;
+    }
+    .textarea-wrapper:focus-within {
+      border-color: #D4A84C;
+      box-shadow: 0 0 0 2px rgba(212,168,76,0.1);
+    }
+    .textarea-wrapper textarea {
+      width: 100%;
+      min-height: 150px;
+      border: none;
+      background: transparent;
+      padding: 14px 16px;
+      font-size: 15px;
+      color: #333;
+      outline: none;
+      resize: none;
+      line-height: 1.6;
+      font-family: inherit;
+    }
+    .textarea-wrapper textarea::placeholder {
+      color: #C0B8A8;
+    }
+
+    .guide-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      padding: 14px 16px;
+      font-size: 14px;
+      line-height: 1.75;
+      color: #9A9088;
+      pointer-events: none;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .guide-overlay.hidden { display: none; }
+    .guide-overlay strong { color: #D4A84C; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: #3A3D4A;
+      color: #D4A84C;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      -webkit-touch-callout: none;
+      user-select: none;
+      margin-top: 6px;
+    }
+    .submit-btn:active {
+      transform: translateY(1px);
+      opacity: 0.9;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: rgba(40,38,36,0.92);
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 14px;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      text-align: center;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- 第一步：选择产品 -->
+  <div class="section-card" id="step1Card">
+    <div class="product-grid">
+
+      <div class="product-card" data-product="openclaw" data-has-subs="true">
+        <div class="product-name">OpenClaw</div>
+      </div>
+
+      <div class="product-card" data-product="marvis" data-has-subs="true">
+        <div class="product-name">Marvis</div>
+      </div>
+
+      <div class="product-card" data-product="hermes" data-has-subs="true">
+        <div class="product-name">Hermes Agent</div>
+      </div>
+
+      <div class="product-card" data-product="claude" data-has-subs="true">
+        <div class="product-name">Claude</div>
+      </div>
+
+      <div class="product-card" data-product="ollama" data-has-subs="false"
+        data-placeholder="例如：电脑配置___（CPU/显卡型号/内存），想在本地跑多大的模型（7B/14B/70B）|例如：是否已安装，卡在哪一步（下载模型/启动/调用）|例如：希望用命令行还是图形界面，是否需要接入其他应用">
+        <div class="product-name">Ollama</div>
+      </div>
+
+      <div class="product-card" data-product="lmstudio" data-has-subs="false"
+        data-placeholder="例如：系统___（Windows/Mac），显卡型号___，显存约___GB|例如：想加载多大的模型，主要用于聊天还是 API 调用|例如：是否遇到加载慢/显存不足/中文乱码">
+        <div class="product-name">LM Studio</div>
+      </div>
+
+      <div class="product-card" data-product="anythingllm" data-has-subs="false"
+        data-placeholder="例如：想搭建私有知识库，文档类型___（PDF/Word/网页）|例如：部署方式___（本地/内网服务器/云），团队人数约___|例如：是否需要联网检索/多用户权限管理">
+        <div class="product-name">AnythingLLM</div>
+      </div>
+
+      <!-- 更多 -->
+      <div class="product-card dashed" data-product="other" data-has-subs="false"
+        data-placeholder="例如：想了解/试用___（具体 AI 产品/能力）|例如：使用场景___（办公/写作/画图/编程/数据分析）|例如：当前是否已有人在用，期望达到什么效果">
+        <div class="product-name">更多 AI 需求</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 第二步：选择问题（默认隐藏） -->
+  <!-- OpenClaw 子项 -->
+  <div class="section-card hidden" id="openclawQuestions">
+    <div class="item-grid">
+      <div class="item-card" data-question="OpenClaw 本地安装协助"
+        data-placeholder="例如：系统___（Windows/Mac/Linux），安装到哪一步报错|例如：是否缺少依赖（Node/Python/网络），报错信息截图|例如：希望本地跑起来后能做什么（自动化/问答/接入）">
+        <span class="card-text">本地安装协助</span>
+      </div>
+      <div class="item-card" data-question="OpenClaw 环境安全检查"
+        data-placeholder="例如：当前 OpenClaw 已接入哪些工具/账号|例如：担心的风险___（数据泄露/越权/外网访问）|例如：希望做一次性检查还是定期巡检">
+        <span class="card-text">环境安全检查</span>
+      </div>
+      <div class="item-card" data-question="OpenClaw Skills 编写技巧"
+        data-placeholder="例如：想实现什么自动化能力___|例如：是否已有参考 Skill，卡在哪儿|例如：希望协助编写还是讲解思路">
+        <span class="card-text">Skills 编写技巧</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marvis 子项 -->
+  <div class="section-card hidden" id="marvisQuestions">
+    <div class="item-grid">
+      <div class="item-card" data-question="Marvis 使用咨询"
+        data-placeholder="例如：想用 Marvis 做什么___（知识管理/问答/接入业务）|例如：当前使用方式___（网页/客户端/API）|例如：遇到的困惑或想优化的点">
+        <span class="card-text">Marvis 使用咨询</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card hidden" id="hermesQuestions">
+    <div class="item-grid">
+      <div class="item-card" data-question="Hermes Agent 安装体验协助"
+        data-placeholder="例如：系统___，安装到哪一步卡住|例如：是否缺少运行环境，报错信息|例如：希望跑通后能完成什么任务">
+        <span class="card-text">安装体验协助</span>
+      </div>
+      <div class="item-card" data-question="Hermes Agent 使用技巧答疑"
+        data-placeholder="例如：想用 Hermes 做___（任务编排/多 Agent/接入工具）|例如：当前卡在哪儿，期望效果|例如：是否需要示例配置或最佳实践">
+        <span class="card-text">使用技巧答疑</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Claude 子项 -->
+  <div class="section-card hidden" id="claudeQuestions">
+    <div class="item-grid">
+      <div class="item-card" data-question="Claude 本地安装协助"
+        data-placeholder="例如：系统___，想用哪种方式（官方客户端/API/第三方）|例如：卡在哪一步，报错信息|例如：主要用于___（写作/编程/分析）">
+        <span class="card-text">本地安装协助</span>
+      </div>
+      <div class="item-card" data-question="Claude 模型 APIKey 申请"
+        data-placeholder="例如：用途___（开发/个人试用/内部工具）|例如：是否有境外手机号/邮箱用于注册|例如：是否需要协助配置额度与计费">
+        <span class="card-text">模型 APIKey</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 表单区 -->
+  <div class="form-section">
+    <div class="form-card">
+      <form id="applyForm">
+
+        <div class="form-group">
+          <label>请描述您的 AI 需求<span class="required">*</span></label>
+          <div class="textarea-wrapper">
+            <div class="guide-overlay" id="guideOverlay">👆 点击上方卡片，获取填写提示</div>
+            <textarea id="description" placeholder=""></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">通知专员</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const SCF_FUNCTION_URL = 'https://1257899736-hv374mow7r.ap-guangzhou.tencentcf.com';
+
+    let selectedProduct = null;
+    let selectedQuestion = null;
+
+    // 浮层引导
+    const descField = document.getElementById('description');
+    const guideOverlay = document.getElementById('guideOverlay');
+    const PLACEHOLDER_DEFAULT = '👆 点击上方卡片，获取填写提示';
+    let lastGuide = null;
+
+    function showGuide(question, placeholder) {
+      lastGuide = { question, placeholder };
+      const guideHtml = (placeholder || '').replace(/\|/g, '<br>');
+      guideOverlay.innerHTML = '<strong>' + question + '</strong><br><br>' + guideHtml;
+      guideOverlay.classList.remove('hidden');
+      descField.placeholder = '';
+    }
+    function restoreGuide() {
+      if (lastGuide) showGuide(lastGuide.question, lastGuide.placeholder);
+      else { guideOverlay.classList.add('hidden'); descField.placeholder = PLACEHOLDER_DEFAULT; }
+    }
+    descField.addEventListener('focus', () => guideOverlay.classList.add('hidden'));
+    descField.addEventListener('input', () => { if (descField.value.trim()) guideOverlay.classList.add('hidden'); });
+    descField.addEventListener('blur', () => { if (!descField.value.trim()) restoreGuide(); });
+
+    // 产品卡片点击
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const product = card.dataset.product;
+        const hasSubs = card.dataset.hasSubs === 'true';
+
+        document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedProduct = product;
+
+        if (hasSubs) {
+          // 有子项：进入第二步，显示对应问题
+          document.querySelectorAll('[id$=Questions]').forEach(el => el.classList.add('hidden'));
+          const qCard = document.getElementById(product + 'Questions');
+          if (qCard) {
+            qCard.classList.remove('hidden');
+            qCard.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
+          }
+          setTimeout(() => {
+            qCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        } else {
+          // 无子项：直接展示该产品的填写示例
+          selectedQuestion = product === 'other' ? '' : product;
+          showGuide(card.querySelector('.product-name').textContent, card.dataset.placeholder || '');
+          document.querySelectorAll('[id$=Questions]').forEach(el => el.classList.add('hidden'));
+          setTimeout(() => {
+            document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
+      });
+    });
+
+    // 问题卡片点击
+    document.querySelectorAll('.item-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const q = card.dataset.question || '';
+        if (!q) return;
+
+        const wasSelected = card.classList.contains('selected');
+        card.closest('.item-grid').querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
+
+        if (!wasSelected) {
+          card.classList.add('selected');
+          selectedQuestion = q;
+          showGuide(q, card.dataset.placeholder || '');
+          setTimeout(() => {
+            document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 200);
+        } else {
+          selectedQuestion = null;
+        }
+      });
+    });
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    // 表单提交
+    document.getElementById('applyForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const desc = document.getElementById('description').value.trim();
+
+      if (!desc) { showToast('⚠️ 请描述您的 AI 需求'); return; }
+
+      const btn = e.target.querySelector('.submit-btn');
+      btn.textContent = '通知中...';
+      btn.style.opacity = '0.6';
+
+      try {
+        const timeStr = new Date().toLocaleString('zh-CN');
+        const questionLine = selectedQuestion ? '\n> **选中问题：**' + selectedQuestion : '';
+        const message = {
+          msgtype: 'markdown',
+          markdown: {
+            content:
+              '**🤖 AI 服务新咨询**\n\n' +
+              '> **需求：**' + desc + '\n' +
+              questionLine +
+              '> **时间：**' + timeStr + '\n\n' +
+              '---\n' +
+              '<font color="info">8000VIP AI服务</font>'
+          }
+        };
+
+        const resp = await fetch(SCF_FUNCTION_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(message)
+        });
+
+        const result = await resp.json();
+        if (result.errcode === 0) {
+          showToast('✅ 提交成功！专员会尽快联系您');
+          document.getElementById('applyForm').reset();
+          selectedQuestion = null;
+          selectedProduct = null;
+          lastGuide = null;
+          guideOverlay.classList.add('hidden');
+          descField.placeholder = PLACEHOLDER_DEFAULT;
+          document.querySelectorAll('.product-card.selected').forEach(c => c.classList.remove('selected'));
+          document.querySelectorAll('.item-card.selected').forEach(c => c.classList.remove('selected'));
+          document.querySelectorAll('[id$=Questions]').forEach(el => el.classList.add('hidden'));
+        } else {
+          showToast('提交失败：' + (result.errmsg || '未知错误'));
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('❌ 提交失败，请稍后重试');
+      } finally {
+        btn.textContent = '通知专员';
+        btn.style.opacity = '1';
+      }
+    });
+  </script>
+</body>
+</html>

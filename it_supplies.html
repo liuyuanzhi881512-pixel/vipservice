@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>IT 物资申领 - 8000VIP服务</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background-color: #F0EAE4;
+      min-height: 100dvh;
+      color: #333;
+      overscroll-behavior: none;
+    }
+
+    /* ===== Hero 标题区 ===== */
+    .hero {
+      background: linear-gradient(145deg, #2D303B 0%, #3A3D4A 50%, #2D303B 100%);
+      margin: 16px 16px 0;
+      padding: 40px 24px 36px;
+      border-radius: 18px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(45,48,59,0.35);
+      text-align: center;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -30px;
+      width: 140px;
+      height: 120px;
+      background: radial-gradient(ellipse, rgba(200,170,110,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 20px;
+      left: 28px;
+      width: 6px;
+      height: 6px;
+      background: rgba(218,180,90,0.6);
+      border-radius: 50%;
+      box-shadow:
+        22px -14px 0 1px rgba(218,180,90,0.35),
+        52px 6px 0 1px rgba(218,180,90,0.25),
+        80px -8px 0 1px rgba(218,180,90,0.2);
+      pointer-events: none;
+    }
+
+    .hero-title {
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      line-height: 1.5;
+      color: #D4A84C;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      color: rgba(212,168,76,0.7);
+      margin-top: 10px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== 分隔线 ===== */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(196,176,154,0.3), transparent);
+      margin: 20px 24px 16px;
+    }
+
+    /* ===== 现货区域 ===== */
+    .stock-section {
+      padding: 4px 14px 8px;
+    }
+
+    .section-title {
+      font-size: 17px;
+      color: #7A6E5D;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 16px 4px 12px;
+    }
+
+    .section-title span {
+      font-weight: 400;
+      color: #A09080;
+      font-size: 13px;
+    }
+
+    /* 分类标题（可折叠） */
+    .stock-cat {
+      margin-bottom: 2px;
+    }
+
+    .cat-title {
+      font-size: 15px;
+      color: #5A7A6E;
+      font-weight: 700;
+      padding: 10px 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      border: 1.5px solid #E8E2DA;
+      border-radius: 10px;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .cat-title:active {
+      transform: scale(0.98);
+      background: #FAF8F4;
+    }
+
+    .cat-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background: #EBF3EE;
+      border-radius: 50%;
+      color: #7A9A8E;
+      font-size: 12px;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
+    }
+
+    .stock-cat.collapsed .cat-arrow {
+      transform: rotate(-90deg);
+    }
+
+    /* 折叠动画 */
+    .stock-scroll-wrap {
+      display: grid;
+      grid-template-rows: 1fr;
+      transition: grid-template-rows 0.3s ease, opacity 0.25s ease;
+      opacity: 1;
+      overflow-y: hidden;
+    }
+
+    .stock-cat.collapsed .stock-scroll-wrap {
+      grid-template-rows: 0fr;
+      opacity: 0;
+    }
+
+    .stock-scroll-wrap > div {
+      min-height: 0;
+      overflow-y: hidden;
+    }
+
+    /* 横向滚动卡片列表 */
+    .stock-scroll {
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      touch-action: pan-x;
+    }
+    .stock-scroll::-webkit-scrollbar { display: none; }
+
+    .stock-card {
+      flex: 0 0 auto;
+      width: 140px;
+      background: #fff;
+      border: 2px solid #E8E2DA;
+      border-radius: 13px;
+      padding: 14px 10px 12px;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      text-align: center;
+      -webkit-touch-callout: none;
+      user-select: none;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stock-card.selected {
+      border-color: #D4A84C;
+      background: #FFFDF5;
+      box-shadow: 0 0 0 1px #D4A84C, 0 2px 12px rgba(212,168,76,0.15);
+    }
+
+    .stock-card.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      width: 18px;
+      height: 18px;
+      background: #D4A84C;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .stock-card:active {
+      transform: scale(0.96);
+    }
+
+    .stock-card.selected:active {
+      background: #FFF8E0;
+    }
+
+    @media (hover: hover) {
+      .stock-card:hover {
+        background: #FBF8F4;
+        border-color: #C4B09A;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 12px rgba(60,50,40,0.08);
+      }
+    }
+
+    .stock-card-name {
+      font-size: 13px;
+      color: #3A3530;
+      font-weight: 600;
+      line-height: 1.4;
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stock-card-tag {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 2px 8px;
+      background: #EBF7E8;
+      color: #52A44A;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 6px;
+    }
+
+    /* ===== 表单区域 ===== */
+    .form-section {
+      margin: 4px 16px 24px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 26px 20px;
+      box-shadow: 0 1px 8px rgba(60,50,40,0.06);
+      padding-bottom: max(26px, env(safe-area-inset-bottom, 26px));
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .form-header h2 {
+      font-size: 17px;
+      color: #3A3530;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .form-header p {
+      font-size: 12px;
+      color: #AAA499;
+      margin-top: 6px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #77726A;
+      margin-bottom: 7px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 13px 15px;
+      border: 1.5px solid #E5DED6;
+      border-radius: 10px;
+      font-size: 16px;
+      color: #333;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      outline: none;
+      font-family: inherit;
+      background: #FAF8F5;
+      -webkit-appearance: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: #C4B09A;
+      box-shadow: 0 0 0 3px rgba(196,176,154,0.12);
+      background: #fff;
+    }
+
+    /* 选择提示（未选物品时显示） */
+    .select-prompt {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px 16px;
+      background: #FAF8F5;
+      border: 2px dashed #D5CBBF;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #A09080;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .select-prompt:active {
+      background: #F5F0EA;
+      border-color: #C4B09A;
+    }
+
+    .select-prompt-icon {
+      font-size: 18px;
+      animation: tapBounce 2s ease-in-out infinite;
+      line-height: 1;
+    }
+
+    @keyframes tapBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    .form-group textarea {
+      min-height: 90px;
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #3A3D4A 0%, #2D303B 100%);
+      color: #D4A84C;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 2px;
+      min-height: 50px;
+      -webkit-tap-highlight-color: transparent;
+      margin-top: 4px;
+    }
+
+    .submit-btn:active {
+      opacity: 0.85;
+      transform: scale(0.98);
+    }
+    .submit-btn:hover {
+      box-shadow: 0 4px 16px rgba(45,48,59,0.3);
+    }
+    /* 已选物品列表 - 上下两行 */
+    .selected-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .selected-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #FFFDF5;
+      border: 1.5px solid #E8E2DA;
+      border-radius: 10px;
+    }
+
+    .selected-row-name {
+      flex: 1 1 auto;
+      min-width: 0;
+      font-size: 14px;
+      color: #3A3530;
+      font-weight: 600;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .selected-row-remove {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: #C0A898;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: all 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .selected-row-remove:active {
+      background: #F0E8E0;
+      color: #C45A3A;
+    }
+
+    .selected-row-bottom {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .selected-row-bottom label {
+      display: none;
+    }
+
+    /* 数量选择器 - 按钮组 */
+    .qty-selector {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      background: #F5F0EA;
+      border-radius: 8px;
+      padding: 3px;
+      border: 1.5px solid #E5DED6;
+    }
+
+    .qty-option {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 30px;
+      height: 28px;
+      padding: 0 8px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: #777;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      position: relative;
+    }
+
+    .qty-option.active {
+      background: #fff;
+      color: #D4A84C;
+      font-weight: 700;
+      box-shadow: 0 1px 4px rgba(60,50,40,0.1);
+    }
+
+    .qty-option:active {
+      transform: scale(0.94);
+    }
+
+    /* 更多选项的输入框 */
+    .qty-custom-input {
+      width: 40px;
+      height: 24px;
+      text-align: center;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #D4A84C;
+      font-size: 14px;
+      font-weight: 600;
+      -webkit-appearance: none;
+    }
+    .qty-custom-input::placeholder { color: #BBB; }
+
+    .selected-count {
+      font-size: 13px;
+      color: #D4A84C;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: max(20px, env(safe-area-inset-top, 20px));
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #fff;
+      padding: 12px 22px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      font-size: 14px;
+      z-index: 1000;
+      transition: transform 0.35s cubic-bezier(0.68,-0.55,0.265,1.55);
+      white-space: nowrap;
+      max-width: calc(100vw - 40px);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success { color: #52c41a; border-left: 4px solid #52c41a; }
+    .toast.error { color: #ff4d4f; border-left: 4px solid #ff4d4f; }
+
+    /* 页脚 */
+    .footer {
+      text-align: center;
+      padding: 8px 20px max(20px, env(safe-area-inset-bottom, 20px));
+      color: #BBB5AA;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== 桌面端 ===== */
+    @media (min-width: 768px) {
+      .page-wrap { max-width: 520px; margin: 0 auto; }
+      .hero { margin: 24px auto 0; }
+      .hero-title { font-size: 30px; }
+      .stock-card { width: 150px; }
+    }
+
+    /* ===== iPhone SE / 小屏 ===== */
+    @media (max-width: 374px) {
+      .hero { margin: 12px 10px 0; padding: 30px 18px 28px; }
+      .hero-title { font-size: 22px; letter-spacing: 1.5px; }
+      .hero-desc { font-size: 13px; }
+      .stock-section { padding: 2px 8px 6px; }
+      .stock-card { width: 120px; padding: 12px 8px 10px; }
+      .stock-card-icon { font-size: 24px; }
+      .stock-card-name { font-size: 12px; }
+      .stock-card-tag { font-size: 10px; }
+      .section-title { font-size: 15px; padding: 12px 4px 8px; }
+      .cat-title { font-size: 14px; padding: 9px 8px; }
+      .form-section { margin: 4px 10px 20px; padding: 22px 16px; }
+    }
+
+    /* ===== 大屏手机 ===== */
+    @media (min-width: 390px) and (max-width: 767px) {
+      .hero-title { font-size: 28px; }
+    }
+
+    /* ===== 横屏 ===== */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .hero { margin: 8px 12px 0; padding: 22px 20px 18px; }
+      .hero-title { font-size: 20px; }
+      .hero-desc { display: none; }
+      .stock-card { width: 120px; padding: 10px 8px; }
+      .form-section { margin-bottom: 10px; padding: 18px 16px; }
+    }
+
+    input[type="text"], textarea, select { -webkit-appearance: none; }
+  </style>
+</head>
+<body>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="page-wrap">
+
+    <!-- Hero 标题区 -->
+    <section class="hero">
+      <div class="hero-title">IT 物资申领</div>
+      <div class="hero-desc">库内现货当日可取，紧急采购次日可达</div>
+    </section>
+
+    <!-- 库内现货（横向滑动） -->
+    <section class="stock-section">
+
+      <div class="section-title">库内现货 <span>（当日可取，点击申领）</span></div>
+
+      <!-- 硬盘盒 -->
+      <div class="stock-cat collapsed">
+        <div class="cat-title">硬盘盒<span class="cat-arrow">▾</span></div>
+        <div class="stock-scroll-wrap"><div class="stock-scroll">
+          <div class="stock-card" data-item="绿联移动硬盘盒 M2">          <div class="stock-card-name">绿联 M2 硬盘盒</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="绿联移动硬盘盒 SATA">          <div class="stock-card-name">绿联 SATA 硬盘盒</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 线材 -->
+      <div class="stock-cat collapsed">
+        <div class="cat-title">线材<span class="cat-arrow">▾</span></div>
+        <div class="stock-scroll-wrap"><div class="stock-scroll">
+          <div class="stock-card" data-item="绿联 Type-C 数据线 100W">          <div class="stock-card-name">Type-C 数据线 100W</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="倍思三合一快充线">          <div class="stock-card-name">倍思三合一快充线</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="制糖工厂 磁吸贴贴线 240W C-C">          <div class="stock-card-name">制糖工厂 磁吸贴贴线</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 支架 -->
+      <div class="stock-cat collapsed">
+        <div class="cat-title">支架<span class="cat-arrow">▾</span></div>
+        <div class="stock-scroll-wrap"><div class="stock-scroll">
+          <div class="stock-card" data-item="联想 异能者笔记本支架">          <div class="stock-card-name">联想 笔记本支架</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="KU XIU iPad 磁吸支架 11英寸">          <div class="stock-card-name">KU XIU iPad 支架 11"</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="KU XIU iPad 磁吸支架 13英寸">          <div class="stock-card-name">KU XIU iPad 支架 13"</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 存储 -->
+      <div class="stock-cat collapsed">
+        <div class="cat-title">存储<span class="cat-arrow">▾</span></div>
+        <div class="stock-scroll-wrap"><div class="stock-scroll">
+          <div class="stock-card" data-item="梵想 2TB SSD 固态硬盘 M.2">          <div class="stock-card-name">梵想 2TB SSD M.2</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="联想 256G U盘 双头">          <div class="stock-card-name">联想 256G U盘 双头</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="联想 32GB U盘">          <div class="stock-card-name">联想 32GB U盘</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 外设 -->
+      <div class="stock-cat collapsed">
+        <div class="cat-title">外设<span class="cat-arrow">▾</span></div>
+        <div class="stock-scroll-wrap"><div class="stock-scroll">
+          <div class="stock-card" data-item="雷柏 无线/蓝牙多模键鼠套装">          <div class="stock-card-name">雷柏 键鼠套装</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="罗技 MX Anywhere 3S 无线鼠标">          <div class="stock-card-name">罗技 MX Anywhere 3S</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="绿联 WiFi6 USB 无线网卡">          <div class="stock-card-name">绿联 WiFi6 无线网卡</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="绿联读卡器">          <div class="stock-card-name">绿联 读卡器</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="AOC 黑色鼠标垫 800*300">          <div class="stock-card-name">AOC 鼠标垫 800*300</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="绿联 USB 蓝牙适配器">          <div class="stock-card-name">绿联 蓝牙适配器</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="雷柏 M300G 双模无线鼠标">          <div class="stock-card-name">雷柏 M300G 鼠标</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="ikbc W200 红轴 87键 绿色">          <div class="stock-card-name">ikbc W200 红轴 87键</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="倍思 Macbook Pro 磁吸防窥膜 14英寸">          <div class="stock-card-name">倍思 磁吸防窥膜 14"</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="宝利通无线耳机">          <div class="stock-card-name">宝利通 无线耳机</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="灵耀魔方 WiFi7 分布式子母路由器">          <div class="stock-card-name">灵耀魔方 WiFi7 路由器</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="安克 250W 充电基站">          <div class="stock-card-name">安克 250W 充电基站</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="罗技 GPW4代 朱雀 极影黑">          <div class="stock-card-name">罗技 GPW4 朱雀 极影黑</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="罗技 MX Anywhere 3S 无线鼠标">          <div class="stock-card-name">罗技 MX Anywhere 3S</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="妙联宝 293 V3.0 黑色中文版">          <div class="stock-card-name">妙联宝 293 V3.0 中文版</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 充电设备 -->
+      <div class="stock-cat collapsed">
+        <div class="cat-title">充电设备<span class="cat-arrow">▾</span></div>
+        <div class="stock-scroll-wrap"><div class="stock-scroll">
+          <div class="stock-card" data-item="安克 MagSafe 磁吸充电宝 10000毫安">          <div class="stock-card-name">安克 磁吸充电宝 10000mAh</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="雷士电工 全球旅行插头">          <div class="stock-card-name">雷士 全球旅行插头</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="酷态科 6号充电宝 6000毫安">          <div class="stock-card-name">酷态科 6号充电宝 6000mAh</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="酷态科 15号快充头 140W">          <div class="stock-card-name">酷态科 15号快充头 140W</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="Aresh 磁吸三合一无线充电器">          <div class="stock-card-name">Aresh 磁吸三合一充电器</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="KU XIU qi2 认证苹果三合一无线充电器">          <div class="stock-card-name">KU XIU qi2 三合一充电器</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+          <div class="stock-card" data-item="奥睿科 便捷排插/USB插座/口袋插排">          <div class="stock-card-name">奥睿科 口袋插排</div>
+            <div class="stock-card-tag">有现货</div>
+          </div>
+        </div></div>
+      </div>
+
+    </section>
+
+    <!-- 分隔线 -->
+    <div class="divider"></div>
+
+    <!-- 表单 -->
+    <section class="form-section" id="formSection">
+      <div class="form-header">
+        <h2>提交申领需求</h2>
+        <p>专员将在收到后尽快联系您</p>
+      </div>
+      <form id="applyForm">
+        <!-- 已选物品列表（每行含独立数量输入框） -->
+        <div class="form-group" id="selectedGroup" style="display:none;">
+          <label>已选物品（点击 ✕ 可移除）</label>
+          <div class="selected-list" id="selectedList"></div>
+        </div>
+
+        <!-- 未选时显示提示 -->
+        <div class="form-group" id="manualGroup">
+          <label>申领物品 <span>（请从上方选择物品）</span></label>
+          <div class="select-prompt" id="selectPrompt">
+            <span class="select-prompt-icon">👆</span>
+            <span>点击上方现货卡片，选择您需要的物品</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="urgentInput">紧急采购 <span>（楼宇不备货，专员协助采购）</span></label>
+          <textarea id="urgentInput" name="urgentInput" placeholder="例如：任意键盘、任意鼠标、手机防窥膜、手机保护壳、iPad 支架、笔记本防窥膜、显示器护眼灯、显示器遮光罩、SD/microSD 存储卡"></textarea>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">通知专员</button>
+      </form>
+    </section>
+
+    <footer class="footer">
+      8000VIP 服务 · 您的 24 小时 IT 私人助理
+    </footer>
+
+  </div>
+
+  <script>
+    // SCF 函数地址（部署后替换）
+    const WEBHOOK_URL = 'https://1257899736-0095utqwux.ap-guangzhou.tencentcf.com';
+
+    // 已选物品数组，每项：{ name, qty }
+    let selectedItems = [];
+
+    function fixViewportHeight() {
+      document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
+    }
+    fixViewportHeight();
+    window.addEventListener('resize', fixViewportHeight);
+    window.addEventListener('orientationchange', () => setTimeout(fixViewportHeight, 300));
+
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'toast ' + type + ' show';
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // 更新已选列表 UI（每行含独立数量输入框）
+    function updateSelectedUI() {
+      const group = document.getElementById('selectedGroup');
+      const manualGroup = document.getElementById('manualGroup');
+      const list = document.getElementById('selectedList');
+
+      if (selectedItems.length === 0) {
+        group.style.display = 'none';
+        manualGroup.style.display = '';
+        return;
+      }
+
+      group.style.display = '';
+      manualGroup.style.display = 'none';
+
+      let html = '<div class="selected-count">已选 ' + selectedItems.length + ' 件</div>';
+      selectedItems.forEach((item, idx) => {
+        const q = item.qty || '1';
+        const isCustom = !['1','2','3'].includes(q);
+        html +=
+          '<div class="selected-row" data-idx="' + idx + '">' +
+            '<span class="selected-row-name">' + item.name + '</span>' +
+            '<div class="selected-row-bottom">' +
+              '<div class="qty-selector">' +
+                '<button type="button" class="qty-option' + (q === '1' ? ' active' : '') + '" data-idx="' + idx + '" data-val="1">1</button>' +
+                '<button type="button" class="qty-option' + (q === '2' ? ' active' : '') + '" data-idx="' + idx + '" data-val="2">2</button>' +
+                '<button type="button" class="qty-option' + (q === '3' ? ' active' : '') + '" data-idx="' + idx + '" data-val="3">3</button>' +
+                '<button type="button" class="qty-option' + (isCustom ? ' active' : '') + '" data-idx="' + idx + '" data-val="custom">' +
+                  (isCustom ? '<input class="qty-custom-input" value="' + q + '" placeholder="数量" data-idx="' + idx + '">' : '更多') +
+                '</button>' +
+              '</div>' +
+              '<button class="selected-row-remove" data-idx="' + idx + '" type="button">✕</button>' +
+            '</div>' +
+          '</div>';
+      });
+      list.innerHTML = html;
+
+      // 绑定删除按钮
+      list.querySelectorAll('.selected-row-remove').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = parseInt(btn.dataset.idx);
+          const card = document.querySelector('.stock-card[data-item="' + selectedItems[idx].name + '"]');
+          if (card) card.classList.remove('selected');
+          selectedItems.splice(idx, 1);
+          updateSelectedUI();
+        });
+      });
+
+      // 绑定数量选择器按钮
+      list.querySelectorAll('.qty-option').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = parseInt(btn.dataset.idx);
+          const val = btn.dataset.val;
+          const row = btn.closest('.selected-row');
+
+          if (val === 'custom') {
+            // 切换到"更多"模式：激活当前，显示输入框
+            row.querySelectorAll('.qty-option').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // 如果还没变成输入框状态，替换为带输入的
+            const hasInput = btn.querySelector('.qty-custom-input');
+            if (!hasInput) {
+              btn.innerHTML = '<input class="qty-custom-input" placeholder="数量" data-idx="' + idx + '">';
+              const input = btn.querySelector('.qty-custom-input');
+              input.focus();
+              input.addEventListener('input', () => {
+                selectedItems[idx].qty = input.value.trim() || '1';
+              });
+              input.addEventListener('blur', () => {
+                if (!input.value.trim()) {
+                  // 空值回退到1
+                  selectQty(row, idx, '1');
+                }
+              });
+            } else {
+              hasInput.focus();
+            }
+            selectedItems[idx].qty = btn.querySelector('.qty-custom-input')?.value?.trim() || '';
+          } else {
+            selectQty(row, idx, val);
+          }
+        });
+      });
+
+      function selectQty(row, idx, val) {
+        row.querySelectorAll('.qty-option').forEach(b => b.classList.remove('active'));
+        const targetBtn = row.querySelector('.qty-option[data-val="' + val + '"]');
+        if (targetBtn) targetBtn.classList.add('active');
+        // 恢复"更多"按钮的文字
+        const customBtn = row.querySelector('.qty-option[data-val="custom"]');
+        if (customBtn && !customBtn.querySelector('.qty-custom-input')) {
+          customBtn.innerHTML = '更多';
+        }
+        selectedItems[idx].qty = val;
+      }
+
+      // 已有自定义输入框的事件绑定
+      list.querySelectorAll('.qty-custom-input').forEach(input => {
+        input.addEventListener('input', () => {
+          const idx = parseInt(input.dataset.idx);
+          selectedItems[idx].qty = input.value.trim();
+        });
+      });
+    }
+
+    // 分类折叠展开
+    document.querySelectorAll('.cat-title').forEach(title => {
+      title.addEventListener('click', () => {
+        const cat = title.closest('.stock-cat');
+        cat.classList.toggle('collapsed');
+      });
+    });
+
+    // 点击提示区域 → 滚动到上方现货区
+    document.getElementById('selectPrompt').addEventListener('click', () => {
+      document.querySelector('.stock-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // 库存卡片点击 → 切换选中
+    document.querySelectorAll('.stock-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const item = card.dataset.item;
+        const existIdx = selectedItems.findIndex(it => it.name === item);
+        if (existIdx >= 0) {
+          selectedItems.splice(existIdx, 1);
+          card.classList.remove('selected');
+        } else {
+          selectedItems.push({ name: item, qty: '1' });
+          card.classList.add('selected');
+        }
+        updateSelectedUI();
+      });
+    });
+
+    // 表单提交
+    document.getElementById('applyForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const desc = document.getElementById('urgentInput').value.trim();
+
+      let items = [];
+      if (selectedItems.length > 0) {
+        items = selectedItems;
+      } else if (!desc) {
+        showToast('请从上方选择申领物品，或填写紧急采购需求', 'error');
+        return;
+      }
+
+      if (!WEBHOOK_URL) {
+        showToast('服务尚未就绪，请联系管理员', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '通知中...';
+
+      try {
+        const timeStr = new Date().toLocaleString('zh-CN');
+        const itemsText = items.map((it, i) =>
+          '> ' + (i + 1) + '. ' + it.name + (it.qty ? ' ×' + it.qty : '')
+        ).join('\n');
+
+        const message = {
+          msgtype: 'markdown',
+          markdown: {
+            content:
+              '**📦 IT 物资新申领**\n\n' +
+              '> **物品（现货）：**\n' + itemsText + '\n' +
+              (desc ? '> **紧急采购：**\n> ' + desc.replace(/\n/g, '\n> ') + '\n' : '') +
+              '> **时间：**' + timeStr + '\n\n' +
+              '---\n' +
+              '<font color="info">8000VIP IT物资服务</font>'
+          }
+        };
+
+        const res = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(message)
+        });
+        const result = await res.json();
+
+        if (result.errcode === 0 || result.errno === 0) {
+          showToast('✅ 提交成功！专员会尽快联系您');
+          document.getElementById('applyForm').reset();
+          selectedItems = [];
+          document.querySelectorAll('.stock-card.selected').forEach(c => c.classList.remove('selected'));
+          updateSelectedUI();
+        } else {
+          showToast(result.errmsg || '提交失败，请稍后重试', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('网络错误，请检查连接后重试', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '通知专员';
+      }
+    });
+  </script>
+</body>
+</html>

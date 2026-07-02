@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>家庭网络服务 - 8000VIP服务</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background-color: #E8F4FD;
+      min-height: 100vh;
+      color: #333;
+      /* 防止 iOS 弹性滚动溢出 */
+      overscroll-behavior: none;
+      /* 修复 iOS 100vh 问题 */
+      min-height: 100dvh;
+    }
+
+    /* ===== 副标题横幅（页面标题区）===== */
+    .banner {
+      background: linear-gradient(135deg, #FFF9E6 0%, #FFF3CC 100%);
+      margin: 16px 16px 20px;
+      padding: 14px 16px 12px;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      border-left: 4px solid #FFD666;
+      text-align: center;
+    }
+
+    .banner-emoji {
+      font-size: 28px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .banner-text {
+      font-size: 16px;
+      color: #444;
+      font-weight: 700;
+      line-height: 1.55;
+      letter-spacing: 0.3px;
+    }
+
+    /* ===== 主内容卡片（轻量化）===== */
+    .main-card {
+      background: #fff;
+      margin: 0 16px 20px;
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 1px 6px rgba(74,159,245,0.06);
+      border: 1px solid #EDF3FA;
+    }
+
+    /* ===== 问题卡片网格（紧凑版）===== */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .problem-item {
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      border-radius: 10px;
+      min-height: 42px;
+      background: #fff;
+      border: 1.5px solid #E4EEFA;
+      position: relative;
+      box-shadow: 0 1px 4px rgba(74,159,245,0.05);
+    }
+
+    .problem-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .problem-item:active {
+      background-color: #EBF2FF;
+      border-color: #4A9FF5;
+      transform: scale(0.98);
+      box-shadow: 0 1px 8px rgba(74,159,245,0.12);
+    }
+
+    /* 桌面端 hover */
+    @media (hover: hover) {
+      .problem-item:hover {
+        background-color: #F5F9FF;
+        border-color: #7BB8F5;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(74,159,245,0.12);
+      }
+      .problem-item:hover .problem-text {
+        color: #2B7BEF;
+      }
+      .problem-item:hover .card-icon {
+        background: linear-gradient(135deg, #4A9FF5, #3B8BEF);
+        color: #fff;
+      }
+      .problem-item:hover .chevron {
+        opacity: 1;
+        transform: translateX(2px);
+      }
+    }
+
+    .card-icon {
+      width: 26px;
+      height: 26px;
+      background: linear-gradient(135deg, #E8F2FF, #D6EAFF);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4A9FF5;
+      font-size: 13px;
+      flex-shrink: 0;
+      line-height: 1;
+      transition: all 0.2s ease;
+    }
+
+    .bullet {
+      display: none;
+    }
+
+    .problem-text {
+      font-size: 13px;
+      color: #3B5998;
+      line-height: 1.4;
+      font-weight: 500;
+      flex: 1;
+    }
+
+    /* 右侧箭头 */
+    .chevron {
+      color: #B8D4F5;
+      font-size: 11px;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+      opacity: 0.6;
+    }
+
+    .more-hint {
+      text-align: center;
+      padding-top: 10px;
+      color: #999;
+      font-size: 16px;
+      letter-spacing: 6px;
+    }
+
+    /* ===== 底部装饰（精简）===== */
+    /* ===== 表单区域（视觉焦点）===== */
+    .form-section {
+      margin: 0 16px 20px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px 16px 20px;
+      box-shadow:
+        0 4px 20px rgba(74,159,245,0.12),
+        0 1px 3px rgba(0,0,0,0.04);
+      border: 2px solid #D6EBFB;
+      position: relative;
+      overflow: hidden;
+      /* 防止 iOS 键盘遮挡 */
+      padding-bottom: max(28px, env(safe-area-inset-bottom, 28px));
+    }
+
+    /* 表单区域顶部渐变装饰条 */
+    .form-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #4A9FF5, #7BC8F6, #4A9FF5);
+      background-size: 200% 100%;
+    }
+
+    .form-section h2 {
+      font-size: 18px;
+      color: #2B7BEF;
+      margin-bottom: 14px;
+      text-align: center;
+      position: relative;
+      font-weight: 700;
+    }
+
+    .form-section h2::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 3px;
+      background: linear-gradient(90deg, #4A9FF5, #6BB6FC);
+      margin: 8px auto 0;
+      border-radius: 2px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 7px;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid #DDE6F0;
+      border-radius: 10px;
+      font-size: 16px; /* 关键：16px 防止 iOS Safari 自动放大 */
+      color: #333;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      outline: none;
+      font-family: inherit;
+      background: #FAFBFE;
+      -webkit-appearance: none; /* 去掉 iOS 默认圆角 */
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #4A9FF5;
+      box-shadow: 0 0 0 3px rgba(74,159,245,0.12);
+      background: #fff;
+    }
+
+    .form-group input[type="text"] {
+      -webkit-appearance: none;
+      border-radius: 10px;
+    }
+
+    /* textarea 样式由 .textarea-wrapper 统一管理 */
+
+    /* ===== 浮层引导提示（非实体，类似 placeholder） ===== */
+    .textarea-wrapper {
+      position: relative;
+      padding: 13px 14px;
+      border: 1.5px solid #DDE6F0;
+      border-radius: 10px;
+      background: #FAFBFE;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      min-height: 120px;
+    }
+
+    .textarea-wrapper:focus-within {
+      border-color: #4A9FF5;
+      box-shadow: 0 0 0 3px rgba(74,159,245,0.12);
+      background: #fff;
+    }
+
+    .textarea-wrapper textarea {
+      width: 100%;
+      min-height: 100px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+      line-height: 1.6;
+      font-family: inherit;
+      resize: vertical;
+      outline: none;
+      display: block;
+      position: relative;
+      z-index: 2;
+      -webkit-appearance: none;
+    }
+
+    .guide-overlay {
+      position: absolute;
+      top: 13px;
+      left: 14px;
+      right: 14px;
+      bottom: 13px;
+      pointer-events: none;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #9ab8db;
+      overflow: hidden;
+      z-index: 1;
+      transition: opacity 0.2s ease;
+    }
+
+    .guide-overlay.hidden {
+      opacity: 0;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #4A9FF5 0%, #3B8BEF 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      letter-spacing: 1px;
+      /* 最小触摸区域 */
+      min-height: 50px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .submit-btn:active {
+      opacity: 0.85;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ===== Toast 提示 ===== */
+    .toast {
+      position: fixed;
+      top: max(20px, env(safe-area-inset-top, 20px));
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #fff;
+      padding: 12px 22px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      font-size: 14px;
+      z-index: 1000;
+      transition: transform 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      white-space: nowrap;
+      max-width: calc(100vw - 40px);
+      text-align: center;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.success {
+      color: #52c41a;
+      border-left: 4px solid #52c41a;
+    }
+
+    .toast.error {
+      color: #ff4d4f;
+      border-left: 4px solid #ff4d4f;
+    }
+
+    /* ===== 页脚 ===== */
+    .footer {
+      text-align: center;
+      padding: 12px 20px max(24px, env(safe-area-inset-bottom, 24px));
+      color: #999;
+      font-size: 12px;
+    }
+
+    /* ===== 桌面端优化 ===== */
+    @media (min-width: 768px) {
+      .page-wrap {
+        max-width: 540px;
+        margin: 0 auto;
+      }
+      .main-card {
+        padding: 14px 16px;
+      }
+      .problem-grid {
+        gap: 10px;
+      }
+      .form-section {
+        padding: 26px 24px 30px;
+      }
+    }
+
+    /* ===== iPhone SE / 小屏手机 ===== */
+    @media (max-width: 374px) {
+      .banner {
+        margin: 12px 12px 0;
+        padding: 14px 14px 13px;
+      }
+      .banner-emoji {
+        font-size: 30px;
+      }
+      .banner-text {
+        font-size: 15px;
+      }
+      .main-card {
+        margin: 0 10px;
+        padding: 10px 10px;
+      }
+      .tap-hint {
+        font-size: 11px;
+        padding-bottom: 5px;
+      }
+      .problem-grid {
+        gap: 6px;
+      }
+      .problem-item {
+        padding: 8px 8px;
+        min-height: 42px;
+      }
+      .card-icon {
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
+      }
+      .problem-text {
+        font-size: 11.5px;
+      }
+      .form-section {
+        margin: 10px 10px 20px;
+        padding: 18px 14px 24px;
+      }
+    }
+
+    /* ===== 超小屏改为单列 ===== */
+    @media (max-width: 319px) {
+      .problem-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ===== iPhone 12/13/14 Pro Max 等大屏手机 ===== */
+    @media (min-width: 390px) and (max-width: 767px) {
+      .header-title {
+        font-size: 32px;
+      }
+    }
+
+    /* ===== 横屏手机 ===== */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .banner {
+        margin: 8px 16px 0;
+        padding: 10px 14px;
+      }
+      .banner-emoji {
+        font-size: 24px;
+      }
+      .banner-text {
+        font-size: 14px;
+      }
+      .problem-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+      }
+      .problem-item {
+        padding: 6px 6px;
+        min-height: 40px;
+      }
+      .card-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+      }
+      .problem-text {
+        font-size: 11px;
+      }
+      .form-section {
+        margin-bottom: 8px;
+      }
+    }
+
+    /* ===== 修复 iOS 输入框内部阴影 ===== */
+    input[type="text"], textarea {
+      -webkit-appearance: none;
+    }
+
+    /* ===== 防止长按复制 ===== */
+    .problem-grid {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 提示消息 -->
+  <div class="toast" id="toast"></div>
+
+  <div class="page-wrap">
+
+    <!-- 副标题横幅 -->
+    <div class="banner">
+      <span class="banner-emoji">🤔</span>
+      <span class="banner-text">家庭网络问题 · 专员帮您优化</span>
+    </div>
+
+    <!-- 主内容：问题列表 -->
+    <section class="main-card">
+      <div class="problem-grid">
+        <div class="problem-item" data-placeholder="例如：家里___平米，路由器___牌，___房间信号差|例如：平时主要用网（看视频/打游戏/办公），断流频率如何">
+          <span class="card-icon">📡</span>
+          <span class="problem-text">信号差 / 网速慢</span>
+          <span class="chevron">›</span>
+        </div>
+        <div class="problem-item" data-placeholder="例如：户型___室___厅，不想砸墙布线|例如：想用Mesh/电力猫/隐形光纤，预算大概多少">
+          <span class="card-icon">🔧</span>
+          <span class="problem-text">装修没预埋网线</span>
+          <span class="chevron">›</span>
+        </div>
+        <div class="problem-item" data-placeholder="例如：路由器品牌型号___，速度没达标称值|例如：希望优化游戏延迟还是下载速度">
+          <span class="card-icon">⚙️</span>
+          <span class="problem-text">高端路由设置</span>
+          <span class="chevron">›</span>
+        </div>
+        <div class="problem-item" data-placeholder="例如：担心密码破解、蹭网、隐私泄露|例如：有无摄像头/门锁等IoT设备，是否需要访客网络隔离">
+          <span class="card-icon">🔒</span>
+          <span class="problem-text">网络安全防护</span>
+          <span class="chevron">›</span>
+        </div>
+        <div class="problem-item" data-placeholder="例如：小朋友___岁，希望限制上网时段|例如：按设备分别管控，用自带功能还是App">
+          <span class="card-icon">🛡️</span>
+          <span class="problem-text">儿童上网管控</span>
+          <span class="chevron">›</span>
+        </div>
+        <div class="problem-item" data-placeholder="例如：主要用于照片备份/影音库/远程办公，预算约___|例如：已有硬盘___GB，需要外网访问吗">
+          <span class="card-icon">💾</span>
+          <span class="problem-text">NAS 存储选购</span>
+          <span class="chevron">›</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 表单区域 -->
+    <section class="form-section" id="formSection">
+      <h2>描述您的需求</h2>
+      <form id="applyForm">
+        <div class="form-group">
+          <label for="description">问题描述 *</label>
+          <div class="textarea-wrapper">
+            <textarea id="description" name="description" placeholder="" required></textarea>
+            <div class="guide-overlay" id="guideOverlay">👆 点击上方卡片，获取填写提示</div>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">通知专员</button>
+      </form>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+      8000VIP服务 · 您的24小时IT私人助手
+    </footer>
+
+  </div><!-- /page-wrap -->
+
+  <script>
+    // ====== SCF 函数地址（部署后替换为实际地址）======
+    const WEBHOOK_URL = 'https://1257899736-hiux518s7r.ap-guangzhou.tencentcf.com';
+
+    // 修复 iOS 100vh 问题
+    function fixViewportHeight() {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', vh + 'px');
+    }
+    fixViewportHeight();
+    window.addEventListener('resize', fixViewportHeight);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(fixViewportHeight, 300);
+    });
+
+    // Toast 提示
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'toast ' + type + ' show';
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // 表单提交
+    document.getElementById('applyForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const btn = document.getElementById('submitBtn');
+      const description = document.getElementById('description').value.trim();
+
+      if (!description) {
+        showToast('请描述您的问题或需求', 'error');
+        return;
+      }
+
+      // 检查是否配置了 Webhook URL
+      if (!WEBHOOK_URL) {
+        showToast('服务尚未就绪，请联系管理员', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '通知中...';
+
+      try {
+        const now = new Date();
+        const timeStr = now.toLocaleString('zh-CN');
+
+        const message = {
+          msgtype: 'markdown',
+          markdown: {
+            content:
+              '**🏠 家庭网络新咨询**\n\n' +
+              '> **时间：**' + timeStr + '\n' +
+              '> **描述：**\n> ' + description.replace(/\n/g, '\n> ') + '\n\n' +
+              '---\n' +
+              '<font color="info">8000VIP 家庭网络服务</font>'
+          }
+        };
+
+        const response = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(message)
+        });
+
+        const result = await response.json();
+
+        if (result.errcode === 0 || result.errno === 0) {
+          showToast('✅ 提交成功！专员会尽快联系您');
+          document.getElementById('applyForm').reset();
+          guideOverlay.innerHTML = '👆 点击上方卡片，获取填写提示';
+          guideOverlay.classList.remove('hidden');
+        } else {
+          showToast(result.errmsg || '提交失败，请稍后重试', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('网络错误，请检查连接后重试', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '通知专员';
+      }
+    });
+
+    // 问题项点击效果
+    const descField = document.getElementById('description');
+    const guideOverlay = document.getElementById('guideOverlay');
+
+    // textarea 获得焦点或有值时隐藏浮层
+    descField.addEventListener('focus', () => {
+      guideOverlay.classList.add('hidden');
+    });
+    descField.addEventListener('input', () => {
+      if (descField.value.trim()) {
+        guideOverlay.classList.add('hidden');
+      }
+    });
+    // 失去焦点且无值时恢复默认提示
+    descField.addEventListener('blur', () => {
+      if (!descField.value.trim()) {
+        guideOverlay.innerHTML = '👆 点击上方卡片，获取填写提示';
+        guideOverlay.classList.remove('hidden');
+      }
+    });
+
+    document.querySelectorAll('.problem-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const text = item.querySelector('.problem-text').textContent;
+        const placeholder = item.dataset.placeholder || '';
+
+        // 浮层显示：引导提示词（非实体，用户一点就消失）
+        const guideHtml = (placeholder || '').replace(/\|/g, '<br>');
+        guideOverlay.innerHTML = guideHtml;
+        guideOverlay.classList.remove('hidden');
+        // 清空已有内容
+        descField.value = '';
+
+        document.getElementById('formSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  </script>
+</body>
+</html>

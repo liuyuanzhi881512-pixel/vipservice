@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>数码选购咨询 · 8000VIP服务</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #f0ebe3;
+    --card-bg:   #ffffff;
+    --card-bg-2: #faf7f2;
+    --gold:      #b8924a;
+    --gold-l:    #d4a853;
+    --gold-d:    #9a7832;
+    --gold-glow: rgba(184,146,74,0.1);
+    --icon-bg:   #ede4d4;
+    --text-p:    #2c2c34;
+    --text-s:    #8a857e;
+    --accent:    #b8924a;
+    --border:    rgba(0,0,0,0.06);
+    --radius:    16px;
+    --radius-sm: 12px;
+    --shadow:    0 2px 16px rgba(0,0,0,0.06);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  body {
+    font-family: 'Inter', 'Noto Sans SC', -apple-system, 'PingFang SC', sans-serif;
+    background: var(--bg);
+    color: var(--text-p);
+    line-height: 1.55;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ======= 导航栏 ======= */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: none;
+  }
+  .navbar .back-btn {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-p);
+    font-size: 22px; cursor: pointer; border-radius: 50%;
+    transition: background .2s;
+  }
+  .navbar .back-btn:active { background: rgba(0,0,0,0.06); }
+  .navbar .nav-title {
+    flex: 1;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-right: 32px;
+    color: var(--text-p);
+  }
+
+  /* ======= 主容器 ======= */
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 12px 16px calc(env(safe-area-inset-bottom, 0) + 8px);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ======= VIP 用户卡片（顶部 Hero）======= */
+  .hero-card {
+    position: relative;
+    background: linear-gradient(135deg, #3a3a44 0%, #2c2c34 50%, #24242c 100%);
+    border-radius: var(--radius);
+    padding: 22px 20px 20px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -10px;
+    width: 120px; height: 110px;
+    background:
+      linear-gradient(135deg, transparent 40%, rgba(212,168,83,0.18) 45%, rgba(212,168,83,0.06) 50%, transparent 55%),
+      conic-gradient(from 45deg at 60% 40%, rgba(212,168,83,0.25) 0deg, transparent 90deg, rgba(212,168,83,0.1) 180deg, transparent 270deg, rgba(212,168,83,0.2) 360deg);
+    clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+    transform: rotate(-5deg);
+    pointer-events: none;
+  }
+  .hero-card::after {
+    content: '';
+    position: absolute;
+    top: -10px; right: 20px;
+    width: 80px; height: 75px;
+    background: linear-gradient(135deg, rgba(240,215,140,0.3), rgba(212,168,83,0.1));
+    clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+    pointer-events: none;
+  }
+  .hero-card h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--gold-l);
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-card .subtitle {
+    font-size: 13px;
+    color: #a8a0a0;
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 1;
+  }
+  .sparkle {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: var(--gold-l);
+    border-radius: 50%;
+    box-shadow: 0 0 6px 2px rgba(240,215,140,0.5);
+    animation: twinkle 2s ease-in-out infinite;
+  }
+  @keyframes twinkle { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  /* ======= 区块标题 ======= */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 0 4px;
+  }
+  .section-header .diamond-icon {
+    font-size: 18px;
+    filter: drop-shadow(0 1px 3px rgba(184,146,74,0.4));
+  }
+  .section-header h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold-d);
+    letter-spacing: 2px;
+  }
+
+  /* ======= 服务卡片网格（大卡片式）======= */
+  .services-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: -4px;
+    margin-bottom: 10px;
+  }
+  .svc-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 14px 12px 12px;
+    box-shadow: var(--shadow);
+    border: 1.5px solid transparent;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .svc-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(184,146,74,0.08), transparent 60%);
+    opacity: 0;
+    transition: opacity .25s;
+    pointer-events: none;
+  }
+  .svc-card.selected {
+    border-color: var(--gold);
+    box-shadow: 0 4px 20px rgba(184,146,74,0.2), var(--shadow);
+  }
+  .svc-card.selected::before { opacity: 1; }
+  .svc-card:active { transform: scale(0.98); }
+
+  .svc-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .svc-card-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: var(--icon-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+  }
+  .svc-card.selected .svc-card-icon {
+    background: linear-gradient(135deg, var(--gold), var(--gold-d));
+    box-shadow: 0 3px 12px rgba(184,146,74,0.35);
+  }
+  .svc-card-body { flex: 1; }
+  .svc-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-p);
+    margin-bottom: 0;
+    line-height: 1.35;
+  }
+  .svc-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .svc-tag {
+    font-size: 11.5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--card-bg-2);
+    color: var(--text-s);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+    transition: all .2s;
+  }
+  .svc-card.selected .svc-tag {
+    background: var(--gold-glow);
+    color: var(--gold-d);
+    border-color: rgba(184,146,74,0.2);
+  }
+
+  /* 右侧选中勾 */
+  .check-circle {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all .2s;
+  }
+  .check-circle::after {
+    content: '';
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    transform: scale(0);
+    transition: transform .2s cubic-bezier(.4,0,.2,1);
+  }
+  .svc-card.selected .check-circle {
+    border-color: var(--gold);
+  }
+  .svc-card.selected .check-circle::after {
+    transform: scale(1);
+  }
+  .svc-card input[type="checkbox"] { display: none; }
+
+  /* ======= 表单面板 ======= */
+  .form-panel {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 16px 16px 14px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .form-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-l));
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+  .form-group:last-child { margin-bottom: 0; }
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-s);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .form-group label .required {
+    color: #c05050;
+    margin-left: 2px;
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    background: var(--card-bg-2);
+    border: 1px solid var(--border);
+    color: var(--text-p);
+    padding: 13px 14px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    border-radius: var(--radius-sm);
+    transition: border-color .2s, box-shadow .2s;
+    -webkit-appearance: none;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(184,146,74,0.1);
+  }
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: #bbb; }
+  .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+  }
+  .textarea-wrapper { position: relative; overflow: hidden; }
+  .guide-overlay {
+    position: absolute; left: 14px; top: 13px; right: 0;
+    color: #bbb; font-size: 14px; line-height: 1.5; pointer-events: none;
+    white-space: pre-wrap; word-break: break-word;
+    bottom: 0;
+  }
+  .form-group select option { background: #fff; }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 14px; top: 50%; transform: translateY(-50%);
+    width: 0; height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5.5px solid var(--text-s);
+    pointer-events: none;
+  }
+
+  /* ======= 提交按钮 ======= */
+  .submit-area {
+    padding: 4px 0;
+  }
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-d));
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(184,146,74,0.3);
+    transition: all .2s;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+  .submit-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(184,146,74,0.25);
+  }
+  .submit-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ======= 底部信息 ======= */
+  .footer {
+    text-align: center;
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 12px;
+    color: #bbb;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  /* ======= Toast ======= */
+  .toast {
+    position: fixed;
+    top: max(24px, env(safe-area-inset-top, 24px));
+    left: 50%;
+    transform: translateX(-50%) translateY(-140px);
+    background: var(--card-bg);
+    color: var(--text-p);
+    padding: 13px 26px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 9999;
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+    white-space: normal;
+    word-break: break-all;
+    max-width: calc(100vw - 48px);
+    text-align: center;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    border: 1px solid var(--border);
+    font-family: inherit;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ======= 响应式 ======= */
+  @media (max-width: 380px) {
+    .container { padding: 10px 12px calc(env(safe-area-inset-bottom, 0) + 6px); }
+    .svc-card-icon { width: 36px; height: 36px; font-size: 20px; }
+    .svc-card-title { font-size: 13px; }
+    .svc-tag { font-size: 10.5px; padding: 3px 8px; }
+    .hero-card { padding: 18px 16px 16px; margin-bottom: 8px; }
+    .form-panel { padding: 14px 12px 12px; margin-bottom: 8px; }
+    .submit-btn { padding: 13px; }
+  }
+
+  ::-webkit-scrollbar { width: 0; }
+</style>
+</head>
+<body>
+
+
+<div class="container">
+
+  <!-- Hero 卡片 -->
+  <div class="hero-card">
+    <span class="sparkle" style="top:20%;left:15%;"></span>
+    <span class="sparkle" style="top:60%;left:70%;animation-delay:0.7s;"></span>
+    <span class="sparkle" style="top:40%;left:40%;animation-delay:1.3s;"></span>
+    <h1>值不值得买</h1>
+    <div class="subtitle">专员帮您挑 · 数码选购咨询</div>
+  </div>
+
+  <!-- 服务选择 -->
+
+  <div class="services-panel">
+
+    <!-- 手机选购 -->
+    <label class="svc-card" ontouchstart="" onclick="toggleCard(this)" data-placeholder="例如：
+- 想换一台拍照好的手机，预算5000左右
+- 折叠屏和直板机怎么选，日常使用哪个更合适
+- 新款 iPhone 什么时候入手比较划算">
+      <input type="checkbox" value="手机选购咨询">
+      <div class="svc-card-top">
+        <div class="svc-card-icon">📱</div>
+        <div class="svc-card-body">
+          <div class="svc-card-title">手机选购咨询</div>
+        </div>
+        <div class="check-circle"></div>
+      </div>
+      <div class="svc-card-tags">
+        <span class="svc-tag">折叠屏手机</span>
+        <span class="svc-tag">新款 iPhone</span>
+        <span class="svc-tag">拍照手机</span>
+      </div>
+    </label>
+
+    <!-- 台式机/电脑 -->
+    <label class="svc-card" ontouchstart="" onclick="toggleCard(this)" data-placeholder="例如：
+- 需要配一台能跑本地AI模型的电脑
+- 高性能台式机配置推荐，预算1万以内
+- 迷你小主机当开发机够用吗，性能对比一下">
+      <input type="checkbox" value="电脑选购咨询">
+      <div class="svc-card-top">
+        <div class="svc-card-icon">💻</div>
+        <div class="svc-card-body">
+          <div class="svc-card-title">电脑选购咨询</div>
+        </div>
+        <div class="check-circle"></div>
+      </div>
+      <div class="svc-card-tags">
+        <span class="svc-tag">高性能台式机</span>
+        <span class="svc-tag">AI 显卡部署</span>
+        <span class="svc-tag">迷你小主机</span>
+      </div>
+    </label>
+
+    <!-- 办公家具 -->
+    <label class="svc-card" ontouchstart="" onclick="toggleCard(this)" data-placeholder="例如：
+- 想了解哪个牌子的人体工学椅适合久坐
+- 升降桌桌板材质怎么选，实木还是复合板
+- 长时间办公，椅子+桌子一套预算3000左右">
+      <input type="checkbox" value="办公家具选购">
+      <div class="svc-card-top">
+        <div class="svc-card-icon">🪑</div>
+        <div class="svc-card-body">
+          <div class="svc-card-title">办公家具选购</div>
+        </div>
+        <div class="check-circle"></div>
+      </div>
+      <div class="svc-card-tags">
+        <span class="svc-tag">人体工学椅</span>
+        <span class="svc-tag">升降桌</span>
+        <span class="svc-tag">桌板材质</span>
+      </div>
+    </label>
+
+    <!-- 更多购买建议 -->
+    <label class="svc-card" ontouchstart="" onclick="toggleCard(this)" data-placeholder="例如：
+- 公司需要采购一批打印机，推荐性价比高的型号
+- 4K显示器选哪款，设计用途预算2000
+- 其他办公数码设备选购，帮忙给个方案">
+      <input type="checkbox" value="更多购买建议">
+      <div class="svc-card-top">
+        <div class="svc-card-icon">🔧</div>
+        <div class="svc-card-body">
+          <div class="svc-card-title">更多购买建议</div>
+        </div>
+        <div class="check-circle"></div>
+      </div>
+      <div class="svc-card-tags">
+        <span class="svc-tag">打印机</span>
+        <span class="svc-tag">显示器</span>
+        <span class="svc-tag">其他设备</span>
+      </div>
+    </label>
+
+  </div>
+
+  <!-- 申请表单 -->
+  <div class="form-panel">
+    <div class="section-header">
+      <h2>需求内容</h2>
+    </div>
+    <div class="form-group">
+      <label>需求内容<span class="required">*</span></label>
+      <div class="textarea-wrapper">
+        <textarea id="remark" placeholder=""></textarea>
+        <div class="guide-overlay" id="remarkGuide">👆 点击上方卡片，获取填写提示</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 提交按钮 -->
+  <div class="submit-area">
+    <button class="submit-btn" onclick="submitForm()">通知专员</button>
+  </div>
+
+  <div class="footer">8000VIP 服务专线 · 专员将在 15 分钟内联系您</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ========== 卡片选中交互 ==========
+  function toggleCard(card) {
+    const cb = card.querySelector('input[type="checkbox"]');
+    cb.checked = !cb.checked;
+    card.classList.toggle('selected', cb.checked);
+    updateGuide();
+  }
+
+  // 根据选中卡片动态更新需求提示
+  const cardHints = {
+    '手机选购咨询': '手机：预算/用途/品牌偏好',
+    '电脑选购咨询': '电脑：性能需求/用途/预算范围',
+    '办公家具选购': '家具：椅子/桌子/预算/使用时长',
+    '更多购买建议': '其他设备：具体品类/数量/预算'
+  };
+
+  function updateGuide() {
+    const guide = document.getElementById('remarkGuide');
+    if (!guide) return;
+    const checked = [...document.querySelectorAll('.svc-card.selected')];
+    if (checked.length === 0) {
+      guide.textContent = '👆 点击上方卡片，获取填写提示';
+    } else if (checked.length === 1) {
+      const ph = checked[0].dataset.placeholder || '';
+      const firstLine = ph.split('\n')[1] || '';
+      guide.textContent = '例如：' + firstLine.replace(/^- /, '').trim();
+    } else {
+      // 多选：一行搞定，不列每项
+      const names = checked.map(c => c.querySelector('.svc-card-title').textContent).join('、');
+      guide.textContent = '例如：' + names + '，请分别说明预算和需求';
+    }
+  }
+
+  // ========== 企微机器人 Webhook ==========
+  const WEBHOOK_URL = 'https://1257899736-cuc4ne0i3f.ap-guangzhou.tencentscf.com';
+
+  async function submitForm() {
+    const services = [...document.querySelectorAll('.svc-card input:checked')]
+        .map(cb => cb.value);
+    if (services.length === 0) return showToast('请至少选择一项咨询类型');
+
+    const remark = document.getElementById('remark').value.trim();
+
+    if (!remark) return showToast('请填写需求内容');
+
+    const payload = {
+      services, remark,
+      time: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })
+    };
+
+    const msg = buildWeComMsg(payload);
+
+    try {
+      const btn = document.querySelector('.submit-btn');
+      btn.disabled = true;
+      btn.textContent = '通知中...';
+
+      const resp = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(msg)
+      });
+      const result = await resp.json();
+
+      if (result.errcode === 0) {
+        showToast('提交成功！专员将尽快联系您');
+        resetForm();
+      } else {
+        showToast('提交失败，请稍后重试（错误码：' + result.errcode + '）');
+        btn.disabled = false;
+        btn.textContent = '通知专员';
+      }
+    } catch (e) {
+      showToast('网络异常，请检查 Webhook 配置');
+      console.error(e);
+      const btn = document.querySelector('.submit-btn');
+      btn.disabled = false;
+      btn.textContent = '通知专员';
+    }
+  }
+
+  function buildWeComMsg(p) {
+    const servicesText = p.services.map(s => `• ${s}`).join('\n');
+    const text =
+`【数码选购咨询申请】
+━━━━━━━━━━━━━━
+📦 咨询类型：
+${servicesText}
+━━━━━━━━━━━━━━
+📝 需求内容：${p.remark}
+━━━━━━━━━━━━━━
+⏰ 申请时间：${p.time}`;
+    return { msgtype: 'text', text: { content: text } };
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function resetForm() {
+    document.querySelectorAll('.svc-card input').forEach(cb => {
+      cb.checked = false;
+      cb.closest('.svc-card').classList.remove('selected');
+    });
+    document.getElementById('remark').value = '';
+    const g = document.getElementById('remarkGuide');
+    if (g) g.style.display = '';
+    updateGuide();
+    const btn = document.querySelector('.submit-btn');
+    btn.disabled = false;
+    btn.textContent = '通知专员';
+  }
+
+  // 需求描述浮层引导
+  (function() {
+    const ta = document.getElementById('remark');
+    const guide = document.getElementById('remarkGuide');
+    if (ta && guide) {
+      ta.addEventListener('focus', () => { guide.style.display = 'none'; });
+      ta.addEventListener('blur', () => { if (!ta.value.trim()) guide.style.display = ''; });
+    }
+  })();
+</script>
+</body>
+</html>

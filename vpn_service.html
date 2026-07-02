@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>翻墙服务 - 8000VIP服务</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background-color: #F0EAE4;
+      min-height: 100dvh;
+      color: #333;
+      overscroll-behavior: none;
+      padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
+    }
+
+    /* ===== 场景卡片网格 ===== */
+    .scene-section {
+      padding: 4px 14px 8px;
+    }
+
+    .scene-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    /* 卡片区圆角容器 */
+    .scene-wrap {
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 2px 14px rgba(45,40,35,0.06);
+    }
+
+    .scene-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: #F7F3ED;
+      border: 1px solid rgba(196,176,154,0.22);
+      border-radius: 11px;
+      padding: 10px 8px 9px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      min-height: 52px;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .scene-card:active {
+      transform: scale(0.96);
+      background: #FFFDF5;
+      border-color: #D4A84C;
+    }
+
+    @media (hover: hover) {
+      .scene-card:hover {
+        border-color: #C4B09A;
+        box-shadow: 0 2px 10px rgba(60,50,40,0.08);
+        transform: translateY(-1px);
+      }
+    }
+
+    .scene-card.selected {
+      border-color: #D4A84C;
+      background: #FFFDF5;
+      box-shadow: 0 2px 12px rgba(212,168,76,0.15);
+    }
+
+    .scene-card-icon {
+      font-size: 18px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .scene-card-text {
+      font-size: 12px;
+      color: #3A3530;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    /* ===== 表单区域 ===== */
+    .form-section {
+      margin: 4px 16px 24px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 26px 20px;
+      box-shadow: 0 1px 8px rgba(60,50,40,0.06);
+      padding-bottom: max(26px, env(safe-area-inset-bottom, 26px));
+    }
+
+    .form-group { margin-bottom: 18px; }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #77726A;
+      margin-bottom: 7px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 13px 15px;
+      border: 1.5px solid #E5DED6;
+      border-radius: 10px;
+      font-size: 16px;
+      color: #333;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      outline: none;
+      font-family: inherit;
+      background: #FAF8F5;
+      -webkit-appearance: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: #C4B09A;
+      box-shadow: 0 0 0 3px rgba(196,176,154,0.12);
+      background: #fff;
+    }
+
+    /* ===== 文本框 wrapper（承载边框样式 + 浮层引导）===== */
+    .textarea-wrapper {
+      position: relative;
+      padding: 13px 14px;
+      border: 1.5px solid #E5DED6;
+      border-radius: 10px;
+      background: #FAF8F5;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      min-height: 180px;
+    }
+
+    .textarea-wrapper:focus-within {
+      border-color: #C4B09A;
+      box-shadow: 0 0 0 3px rgba(196,176,154,0.12);
+      background: #fff;
+    }
+
+    .textarea-wrapper textarea {
+      width: 100%;
+      min-height: 150px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+      line-height: 1.6;
+      font-family: inherit;
+      resize: vertical;
+      outline: none;
+      display: block;
+      position: relative;
+      z-index: 2;
+      -webkit-appearance: none;
+    }
+
+    /* ===== 浮层引导提示 ===== */
+    .guide-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 13px 14px;
+      pointer-events: none;
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: #C4B09A;
+      background: transparent;
+      border-radius: 10px;
+      overflow: hidden;
+      z-index: 1;
+      transition: opacity 0.2s ease;
+    }
+    .guide-overlay.hidden { display: none; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #3A3D4A 0%, #2D303B 100%);
+      color: #D4A84C;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 2px;
+      min-height: 50px;
+      -webkit-tap-highlight-color: transparent;
+      margin-top: 4px;
+    }
+
+    .submit-btn:active {
+      opacity: 0.85;
+      transform: scale(0.98);
+    }
+    .submit-btn:hover {
+      box-shadow: 0 4px 16px rgba(45,48,59,0.3);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: max(20px, env(safe-area-inset-top, 20px));
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #fff;
+      padding: 12px 22px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      font-size: 14px;
+      z-index: 1000;
+      transition: transform 0.35s cubic-bezier(0.68,-0.55,0.265,1.55);
+      white-space: nowrap;
+      max-width: calc(100vw - 40px);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success { color: #52c41a; border-left: 4px solid #52c41a; }
+    .toast.error { color: #ff4d4f; border-left: 4px solid #ff4d4f; }
+
+    /* ===== 桌面端 ===== */
+    @media (min-width: 768px) {
+      .page-wrap { max-width: 520px; margin: 0 auto; }
+      .scene-grid { gap: 10px; }
+      .scene-card { padding: 12px 10px 11px; min-height: 58px; }
+      .scene-card-icon { font-size: 20px; }
+      .scene-card-text { font-size: 13px; }
+    }
+
+    /* ===== iPhone SE / 小屏 ===== */
+    @media (max-width: 374px) {
+      .scene-section { padding: 2px 8px 6px; }
+      .scene-grid { gap: 6px; }
+      .scene-card { padding: 8px 6px 7px; min-height: 46px; border-radius: 9px; }
+      .scene-card-icon { font-size: 16px; }
+      .scene-card-text { font-size: 11px; }
+      .form-section { margin: 4px 10px 20px; padding: 22px 16px; }
+    }
+
+    /* ===== 大屏手机 ===== */
+    @media (min-width: 390px) and (max-width: 767px) {}
+
+    /* ===== 横屏 ===== */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .scene-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .scene-card { padding: 7px 6px; min-height: 42px; border-radius: 8px; }
+      .scene-card-icon { font-size: 15px; }
+      .scene-card-text { font-size: 10.5px; }
+      .form-section { margin-bottom: 10px; padding: 18px 16px; }
+    }
+
+    input[type="text"], textarea, select { -webkit-appearance: none; }
+  </style>
+</head>
+<body>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="page-wrap">
+
+    <!-- 场景列表 -->
+    <section class="scene-section">
+      <div class="scene-wrap">
+      <div class="scene-grid">
+        <div class="scene-card" data-question="需要体验ChatGPT、Gemini等境外AI服务" data-placeholder="例如：主要想用___（ChatGPT/Gemini/Claude等），用途是___（写代码/翻译/查资料）|例如：希望推荐稳定且速度快的节点，预算约___元/月|例如：之前用过___（机场/VPN），但___（速度慢/不稳定/被墙了）">
+          <span class="scene-card-icon">🤖</span>
+          <span class="scene-card-text">境外 AI 服务</span>
+        </div>
+        <div class="scene-card" data-question="需要提交VFS境外签证申请" data-placeholder="例如：需要申请___国家签证，使用___浏览器访问 VFS 官网|例如：打开页面一直加载不出来/无法上传资料/支付卡被拒|例如：预约时间在___月___日，急需解决">
+          <span class="scene-card-icon">📋</span>
+          <span class="scene-card-text">VFS 签证申请</span>
+        </div>
+        <div class="scene-card" data-question="需要观看NETFLIX、HBO等境外流媒体内容" data-placeholder="例如：想看___（NETFLIX/HBO/Disney+/YouTube Premium）的内容|例如：设备是___（电视/投影/iPad/电脑），家里网络是___宽带|例如：希望画质流畅能看 4K，对延迟要求不高">
+          <span class="scene-card-icon">🎬</span>
+          <span class="scene-card-text">境外流媒体</span>
+        </div>
+        <div class="scene-card" data-question="需要使用AppleTV等境外电视盒子" data-placeholder="例如：已有 AppleTV 设备，型号___|例如：想安装___（美区/港区/台区）的 App，但账号切换有问题|例如：希望实现全屋覆盖，客厅+卧室都能用">
+          <span class="scene-card-icon">📺</span>
+          <span class="scene-card-text">AppleTV 盒子</span>
+        </div>
+        <div class="scene-card" data-question="需要联机游玩境外游戏" data-placeholder="例如：主要玩___（Steam/Epic/PSN/Xbox/任天堂）的___游戏|例如：联机延迟高/无法连接服务器/商店无法购买游戏|例如：希望低延迟方案，能接受___元/月的费用">
+          <span class="scene-card-icon">🎮</span>
+          <span class="scene-card-text">境外游戏联机</span>
+        </div>
+        <div class="scene-card" data-question="需要全屋翻墙，覆盖家中所有设备" data-placeholder="例如：家里有___个设备（手机/平板/电脑/电视等）需要同时上网|例如：目前用的是___路由器，品牌型号___|例如：希望一次配置好，所有设备自动走代理，不需要每个都设置">
+          <span class="scene-card-icon">🏠</span>
+          <span class="scene-card-text">全屋翻墙</span>
+        </div>
+        <div class="scene-card" data-question="需要在内地使用富途（Futu）进行证券交易" data-placeholder="例如：富途账号已开通，主要交易___（港股/美股/ETF）|例如：行情刷新慢/下单延迟高/经常断线|例如：交易时间在___（盘前/盘中/盘后），对稳定性要求很高">
+          <span class="scene-card-icon">📈</span>
+          <span class="scene-card-text">富途证券交易</span>
+        </div>
+        <!-- 其他兜底 -->
+        <div class="scene-card" data-question="" data-placeholder="" style="border-style: dashed; opacity: 0.55;">
+          <span class="scene-card-icon">➕</span>
+          <span class="scene-card-text" style="color: #999;">其他需求</span>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- 表单 -->
+    <section class="form-section" id="formSection">
+      <form id="applyForm">
+        <div class="form-group">
+          <label for="description">描述您的需求 *</label>
+          <div class="textarea-wrapper">
+            <textarea id="description" name="description" required></textarea>
+            <div class="guide-overlay" id="guideOverlay">👆 点击上方场景卡片，或直接描述您的需求</div>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">通知专员</button>
+      </form>
+    </section>
+
+  </div>
+
+  <script>
+    const SCF_FUNCTION_URL = 'https://1257899736-k5tegb176f.ap-guangzhou.tencentscf.com';
+    const WEBHOOK_KEY = '7f867fed-8b0c-4494-a049-e4b734c9f55b';
+
+    let selectedQuestion = '';
+
+    // 浮层引导相关
+    const descField = document.getElementById('description');
+    const guideOverlay = document.getElementById('guideOverlay');
+
+    descField.addEventListener('focus', () => {
+      guideOverlay.classList.add('hidden');
+    });
+    descField.addEventListener('input', () => {
+      guideOverlay.classList.add('hidden');
+    });
+    descField.addEventListener('blur', () => {
+      if (!descField.value.trim()) {
+        guideOverlay.classList.remove('hidden');
+      }
+    });
+
+    // 场景卡片点击 → 显示浮层引导
+    document.querySelectorAll('.scene-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const q = card.dataset.question;
+        const placeholder = card.dataset.placeholder || '';
+        if (!q) return;
+
+        selectedQuestion = q;
+
+        // 高亮当前选中的
+        document.querySelectorAll('.scene-card').forEach(c => {
+          c.style.borderColor = '';
+          c.style.background = '';
+        });
+        card.style.borderColor = '#D4A84C';
+        card.style.background = '#FFFDF5';
+
+        // 浮层显示：标题 + 引导提示词
+        const guideHtml = (placeholder || '').replace(/\|/g, '<br>');
+        guideOverlay.innerHTML = '<strong style="color:#D4A84C;">' + q + '</strong><br><br>' + guideHtml;
+        guideOverlay.classList.remove('hidden');
+
+        // 清空已有内容
+        descField.value = '';
+
+        // 平滑滚动到表单
+        document.getElementById('formSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+
+    // Toast
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'toast ' + type + ' show';
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // 表单提交
+    document.getElementById('applyForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const desc = descField.value.trim();
+
+      if (!desc || desc.length < 3) {
+        showToast('请描述您的需求', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '通知中...';
+
+      try {
+        const timeStr = new Date().toLocaleString('zh-CN');
+        const questionLine = selectedQuestion ? '\n> **选中场景：**' + selectedQuestion.replace(/[？?。]+$/, '') : '';
+
+        const message = {
+          msgtype: 'markdown',
+          markdown: {
+            content:
+              '**🌐 翻墙服务新需求**\n\n' +
+              '> **需求描述：**\n> ' + desc.replace(/\n/g, '\n> ') + (selectedQuestion ? '\n> \n> **选中场景：**' + selectedQuestion.replace(/[？?。]+$/, '') : '') + '\n' +
+              '> **时间：**' + timeStr + '\n\n' +
+              '---\n' +
+              '<font color="info">8000VIP 翻墙服务</font>'
+          }
+        };
+
+        const resp = await fetch(SCF_FUNCTION_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(message)
+        });
+
+        const result = await resp.json();
+
+        if (result.errcode === 0 || result.errno === 0) {
+          showToast('✅ 提交成功！专员会尽快联系您');
+          document.getElementById('applyForm').reset();
+          guideOverlay.innerHTML = '👆 点击上方场景卡片，或直接描述您的需求';
+          guideOverlay.classList.remove('hidden');
+          selectedQuestion = '';
+          document.querySelectorAll('.scene-card').forEach(c => {
+            c.style.borderColor = '';
+            c.style.background = '';
+          });
+        } else {
+          showToast(result.errmsg || '提交失败，请稍后重试', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('网络错误，请检查连接后重试', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '通知专员';
+      }
+    });
+  </script>
+
+</body>
+</html>

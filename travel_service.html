@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>境外差旅 · 8000VIP服务</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #f0ebe3;
+    --card-bg:   #ffffff;
+    --card-bg-2: #faf7f2;
+    --gold:      #b8924a;
+    --gold-l:    #d4a853;
+    --gold-d:    #9a7832;
+    --icon-bg:   #ede4d4;
+    --text-p:    #2c2c34;
+    --text-s:    #8a857e;
+    --border:    rgba(0,0,0,0.06);
+    --radius:    16px;
+    --radius-sm: 12px;
+    --shadow:    0 2px 16px rgba(0,0,0,0.06);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  body {
+    font-family: 'Inter', 'Noto Sans SC', -apple-system, 'PingFang SC', sans-serif;
+    background: var(--bg); color: var(--text-p); line-height: 1.55;
+    min-height: 100vh; -webkit-font-smoothing: antialiased;
+  }
+
+  .navbar {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg); padding: 14px 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .navbar .back-btn {
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+    color:var(--text-p);font-size:22px;cursor:pointer;border-radius:50%;transition:background .2s;
+  }
+  .navbar .back-btn:active { background: rgba(0,0,0,0.06); }
+  .navbar .nav-title { flex:1;font-size:17px;font-weight:600;letter-spacing:1px;text-align:center;margin-right:32px;color:var(--text-p); }
+
+  .container { max-width:480px;margin:0 auto;padding:16px 16px 32px; }
+
+  /* Hero */
+  .hero-card {
+    position:relative;background:linear-gradient(135deg,#3a3a44 0%,#2c2c34 50%,#24242c 100%);
+    border-radius:var(--radius);padding:28px 24px 24px;margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow);
+  }
+  .hero-card::before {
+    content:'';position:absolute;top:-30px;right:-10px;width:120px;height:110px;
+    background:
+      linear-gradient(135deg,transparent 40%,rgba(212,168,83,0.18) 45%,rgba(212,168,83,0.06) 50%,transparent 55%),
+      conic-gradient(from 45deg at 60% 40%,rgba(212,168,83,0.25) 0deg,transparent 90deg,rgba(212,168,83,0.1) 180deg,transparent 270deg,rgba(212,168,83,0.2) 360deg);
+    clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);
+    transform:rotate(-5deg);pointer-events:none;
+  }
+  .hero-card::after {
+    content:'';position:absolute;top:-10px;right:20px;width:80px;height:75px;
+    background:linear-gradient(135deg,rgba(240,215,140,0.3),rgba(212,168,83,0.1));
+    clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);pointer-events:none;
+  }
+  .hero-card h1 { font-size:22px;font-weight:700;letter-spacing:2px;color:var(--gold-l);margin-bottom:4px;position:relative;z-index:1; }
+  .hero-card .subtitle { font-size:13px;color:#a8a0a0;letter-spacing:0.5px;position:relative;z-index:1; }
+
+  /* 区块标题 */
+  .section-header { display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;padding:0 4px; }
+  .section-header h2 { font-size:16px;font-weight:700;color:var(--gold-d);letter-spacing:2px; }
+
+  /* 服务网格 */
+  .services-panel {
+    background:var(--card-bg);border-radius:var(--radius);padding:12px 12px 10px;margin-bottom:16px;
+    box-shadow:var(--shadow);border:1px solid var(--border);
+  }
+  .service-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:6px 8px; }
+  .svc-item {
+    display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;
+    -webkit-touch-callout:none;user-select:none;padding:6px 4px 5px;border-radius:var(--radius-sm);
+    transition:all .2s;position:relative;
+  }
+  .svc-item:active { transform:scale(0.94); }
+  .svc-item .icon-box {
+    width:38px;height:38px;border-radius:10px;background:var(--icon-bg);
+    display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .25s cubic-bezier(.4,0,.2,1);
+  }
+  .svc-item .icon-label { font-size:12px;color:var(--text-p);text-align:center;font-weight:600;transition:color .2s;white-space:nowrap; }
+  .svc-item.selected .icon-box { background:linear-gradient(135deg,var(--gold),var(--gold-d));box-shadow:0 3px 12px rgba(184,146,74,0.35); }
+  .svc-item.selected .icon-label { color:var(--gold-d); }
+  .svc-item input[type="checkbox"] { display:none; }
+
+  /* ======= 表单面板（结构化）======= */
+  .form-panel {
+    background:var(--card-bg);border-radius:var(--radius);padding:18px 16px 16px;margin-bottom:16px;
+    box-shadow:var(--shadow);border:1px solid var(--border);
+    position:relative;
+  }
+  .form-panel::before {
+    content:'';position:absolute;top:0;left:20px;right:20px;height:4px;
+    background:linear-gradient(90deg,var(--gold-l),var(--gold-d));border-radius:4px 4px 0 0;
+  }
+
+  /* 已选物品列表 */
+  .selected-list { display:flex;flex-direction:column;gap:8px;margin-top:4px; }
+  .selected-row {
+    display:flex;align-items:center;gap:8px;padding:10px 12px;
+    background:#FFFDF5;border:1.5px solid #E8E2DA;border-radius:10px;
+    transition:border-color .15s;
+  }
+  .selected-row:hover { border-color:var(--gold); }
+  .selected-row-icon { font-size:18px;flex-shrink:0; }
+  .selected-row-name { flex:1;font-size:14px;font-weight:600;color:var(--text-p);min-width:0; }
+  .selected-row-remove {
+    width:26px;height:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    border:none;background:transparent;color:#C0A898;font-size:14px;font-weight:700;
+    cursor:pointer;border-radius:50%;transition:all .15s;-webkit-tap-highlight-color:transparent;
+  }
+  .selected-row-remove:active { background:#F0E8E0;color:#C45A3A; }
+  .qty-selector {
+    display:inline-flex;align-items:center;gap:0;background:#F5F0EA;
+    border-radius:8px;padding:3px;border:1.5px solid #E5DED6;flex-shrink:0;
+  }
+  .qty-option {
+    display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:28px;padding:0 8px;
+    border:none;border-radius:6px;background:transparent;color:#777;font-size:13px;font-weight:500;
+    cursor:pointer;transition:all .18s ease;-webkit-tap-highlight-color:transparent;user-select:none;position:relative;
+  }
+  .qty-option.active { background:#fff;color:var(--gold);font-weight:700;box-shadow:0 1px 4px rgba(60,50,40,0.1); }
+  .qty-option:active { transform:scale(0.94); }
+  .qty-custom-input {
+    width:40px;height:24px;text-align:center;border:none;outline:none;
+    background:transparent;color:var(--gold);font-size:13px;font-weight:600;-webkit-appearance:none;
+  }
+  .qty-custom-input::placeholder{color:#BBB;}
+
+  /* 选择提示（未选时显示） */
+  .select-prompt {
+    text-align:center;padding:14px 16px;border:2px dashed #E0D8CC;border-radius:10px;
+    color:var(--text-s);font-size:13px;line-height:1.4;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .select-prompt-icon { font-size:20px;display:inline;animation:none;margin-bottom:0; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  .select-prompt:active { border-color:var(--gold);background:#FFFBF0; }
+
+  /* 行程输入 + 备注输入 */
+  .form-group { margin-bottom:14px; }
+  .form-group:last-child { margin-bottom:0; }
+  .form-group label {
+    display:block;font-size:13px;font-weight:600;color:var(--text-s);
+    margin-bottom:6px;letter-spacing:0.5px;
+  }
+  .form-group label .required { color:#c05050;margin-left:2px; }
+  .form-input {
+    width:100%;padding:12px 14px;border:1.5px solid #E5DED6;border-radius:10px;
+    font-size:15px;color:var(--text-p);outline:none;background:#FAF8F5;
+    transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;font-family:inherit;
+  }
+  .form-input:focus { border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,146,74,0.1); }
+  .form-input::placeholder { color:#c0b8a8; }
+  textarea.form-input { min-height:70px;resize:vertical;line-height:1.5; }
+  .textarea-wrapper { position:relative; }
+  .guide-overlay {
+    position:absolute;left:14px;top:12px;right:14px;
+    color:#c0b8a8;font-size:14px;line-height:1.5;pointer-events:none;
+    white-space:pre-wrap;word-break:break-word;
+  }
+  .trip-textarea { min-height:132px; }
+
+  /* 提交按钮 */
+  .submit-area { padding:4px 0; }
+  .submit-btn {
+    width:100%;padding:16px;background:linear-gradient(135deg,var(--gold),var(--gold-d));
+    color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:16px;font-weight:700;
+    letter-spacing:4px;cursor:pointer;box-shadow:0 4px 16px rgba(184,146,74,0.3);transition:all .2s;
+    -webkit-touch-callout:none;user-select:none;
+  }
+  .submit-btn:active { transform:translateY(1px);box-shadow:0 2px 8px rgba(184,146,74,0.25); }
+  .submit-btn:disabled { opacity:.45;cursor:not-allowed;transform:none; }
+
+  /* 底部信息 */
+  .footer { text-align:center;margin-top:10px;padding-top:8px;font-size:12px;color:#bbb;letter-spacing:0.5px; }
+
+  /* Toast */
+  .toast {
+    position:fixed;top:max(24px,env(safe-area-inset-top,24px));left:50%;
+    transform:translateX(-50%) translateY(-140px);background:var(--card-bg);color:var(--text-p);
+    padding:13px 26px;font-size:14px;font-weight:600;z-index:9999;
+    transition:transform .3s cubic-bezier(.4,0,.2,1);white-space:normal;word-break:break-all;
+    max-width:calc(100vw - 48px);text-align:center;border-radius:12px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.12);border:1px solid var(--border);font-family:inherit;
+  }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+
+  @media (max-width:380px) {
+    .container{padding:12px 12px 100px;}
+    .service-grid{gap:5px 6px;}
+    .svc-item .icon-box{width:34px;height:34px;font-size:16px;border-radius:9px;}
+    .svc-item .icon-label{font-size:11px;}
+  }
+  ::-webkit-scrollbar{width:0;}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- 服务选择 -->
+  <div class="services-panel">
+    <div class="section-header"><h2>选择您需要的</h2></div>
+    <div class="service-grid">
+      <label class="svc-item">
+        <input type="checkbox" value="全球上网卡" data-icon="🌐" onchange="onSvcChange(this)">
+        <div class="icon-box">🌐</div><div class="icon-label">全球上网卡</div>
+      </label>
+      <label class="svc-item">
+        <input type="checkbox" value="全球eSIM卡" data-icon="📱" onchange="onSvcChange(this)">
+        <div class="icon-box">📱</div><div class="icon-label">全球eSIM</div>
+      </label>
+      <label class="svc-item">
+        <input type="checkbox" value="便携充电宝" data-icon="🔋" onchange="onSvcChange(this)">
+        <div class="icon-box">🔋</div><div class="icon-label">充电宝</div>
+      </label>
+      <label class="svc-item">
+        <input type="checkbox" value="便携小排插" data-icon="🔌" onchange="onSvcChange(this)">
+        <div class="icon-box">🔌</div><div class="icon-label">便携排插</div>
+      </label>
+      <label class="svc-item">
+        <input type="checkbox" value="全球转换插" data-icon="🌍" onchange="onSvcChange(this)">
+        <div class="icon-box">🌍</div><div class="icon-label">转换插头</div>
+      </label>
+      <label class="svc-item">
+        <input type="checkbox" value="更多差旅需求" data-icon="➕" onchange="onSvcChange(this)">
+        <div class="icon-box">➕</div><div class="icon-label">更多需求</div>
+      </label>
+    </div>
+  </div>
+
+  <!-- 行程与需求 -->
+  <div class="form-panel">
+    <div class="section-header"><h2>行程与需求</h2></div>
+
+    <!-- 已选物品 -->
+    <div class="form-group">
+      <label>申请物品<span class="required">*</span></label>
+      <div id="selectArea">
+        <div class="select-prompt" onclick="document.querySelector('.services-panel').scrollIntoView({behavior:'smooth'})">
+          <span class="select-prompt-icon">👆</span> 点击上方卡片，选择需要的物品
+        </div>
+      </div>
+    </div>
+
+    <!-- 行程简述 -->
+    <div class="form-group">
+      <label>行程简述<span class="required">*</span></label>
+      <div class="textarea-wrapper">
+        <textarea class="form-input trip-textarea" id="tripInfo" placeholder=""></textarea>
+        <div class="guide-overlay" id="tripGuide">例如：7.15在香港(机场)，7.15~7.22在日本，7.22在香港(落地)
+例如：7.15～7.22在日本，飞机起降都在香港机场</div>
+      </div>
+    </div>
+
+    <!-- 其他备注 -->
+    <div class="form-group">
+      <label>其他备注</label>
+      <textarea class="form-input" id="remark" placeholder="特殊需求、品牌偏好等（选填）"></textarea>
+    </div>
+  </div>
+
+  <!-- 提交 -->
+  <div class="submit-area">
+    <button class="submit-btn" onclick="submitForm()">通知专员</button>
+  </div>
+
+  <div class="footer">8000VIP 服务专线 · 专员将在 15 分钟内联系您</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ========== 已选物品管理 ==========
+  let selectedItems = []; // [{name, icon, qty}]
+
+  function onSvcChange(cb) {
+    const item = cb.closest('.svc-item');
+    const name = cb.value;
+    const icon = cb.dataset.icon || '📦';
+    item.classList.toggle('selected', cb.checked);
+    if (cb.checked) {
+      // 避免重复添加
+      if (!selectedItems.find(i => i.name === name)) {
+        selectedItems.push({ name, icon, qty: 1 });
+      }
+    } else {
+      selectedItems = selectedItems.filter(i => i.name !== name);
+    }
+    renderSelectedList();
+  }
+
+  function removeItem(name) {
+    selectedItems = selectedItems.filter(i => i.name !== name);
+    // 取消上方卡片选中
+    document.querySelectorAll('.svc-item input').forEach(cb => {
+      if (cb.value === name) { cb.checked = false; cb.closest('.svc-item').classList.remove('selected'); }
+    });
+    renderSelectedList();
+  }
+
+  function renderSelectedList() {
+    const area = document.getElementById('selectArea');
+    if (selectedItems.length === 0) {
+      area.innerHTML =
+        '<div class="select-prompt" onclick="document.querySelector(\'.services-panel\').scrollIntoView({behavior:\'smooth\'})">' +
+        '<span class="select-prompt-icon">👆</span> 点击上方卡片，选择需要的物品</div>';
+      return;
+    }
+
+    let html = '<div class="selected-list">';
+    selectedItems.forEach((item, idx) => {
+      const q = item.qty || 1;
+      const isCustom = ![1,2,3].includes(q);
+      html +=
+        '<div class="selected-row" data-idx="' + idx + '">' +
+          '<span class="selected-row-icon">' + item.icon + '</span>' +
+          '<span class="selected-row-name">' + item.name + '</span>' +
+          '<div class="qty-selector">' +
+            '<button type="button" class="qty-option' + (q === 1 ? ' active' : '') + '" data-idx="' + idx + '" data-val="1">1</button>' +
+            '<button type="button" class="qty-option' + (q === 2 ? ' active' : '') + '" data-idx="' + idx + '" data-val="2">2</button>' +
+            '<button type="button" class="qty-option' + (q === 3 ? ' active' : '') + '" data-idx="' + idx + '" data-val="3">3</button>' +
+            '<button type="button" class="qty-option' + (isCustom ? ' active' : '') + '" data-idx="' + idx + '" data-val="custom">' +
+              (isCustom ? '<input class="qty-custom-input" value="' + q + '" placeholder="" data-idx="' + idx + '">' : '更多') +
+            '</button>' +
+          '</div>' +
+          '<button class="selected-row-remove" onclick="removeItem(\'' + item.name.replace(/'/g, "\\'") + '\')">✕</button>' +
+        '</div>';
+    });
+    html += '</div>';
+    area.innerHTML = html;
+
+    // 绑定数量按钮事件
+    area.querySelectorAll('.qty-option').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const idx = parseInt(this.dataset.idx);
+        const val = this.dataset.val;
+        const row = this.closest('.selected-row');
+
+        if (val === 'custom') {
+          row.querySelectorAll('.qty-option').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const hasInput = this.querySelector('.qty-custom-input');
+          if (!hasInput) {
+            this.innerHTML = '<input class="qty-custom-input" placeholder="" data-idx="' + idx + '">';
+            const input = this.querySelector('.qty-custom-input');
+            input.focus();
+            input.addEventListener('input', () => {
+              selectedItems[idx].qty = Math.max(1, parseInt(input.value.trim()) || 1);
+            });
+            input.addEventListener('blur', () => {
+              if (!input.value.trim()) selectQtyBtn(row, idx, '1');
+            });
+          } else {
+            hasInput.focus();
+          }
+          selectedItems[idx].qty = this.querySelector('.qty-custom-input')?.value?.trim() || 1;
+        } else {
+          selectQtyBtn(row, idx, val);
+        }
+      });
+    });
+
+    // 自定义输入已有值的事件
+    area.querySelectorAll('.qty-custom-input').forEach(input => {
+      input.addEventListener('input', () => {
+        const idx = parseInt(input.dataset.idx);
+        selectedItems[idx].qty = Math.max(1, parseInt(input.value.trim()) || 1);
+      });
+    });
+  }
+
+  // 行程简述浮层引导
+  (function() {
+    const ta = document.getElementById('tripInfo');
+    const guide = document.getElementById('tripGuide');
+    if (ta && guide) {
+      ta.addEventListener('focus', () => { guide.style.display = 'none'; });
+      ta.addEventListener('blur', () => { if (!ta.value.trim()) guide.style.display = ''; });
+    }
+  })();
+
+  function selectQtyBtn(row, idx, val) {
+    row.querySelectorAll('.qty-option').forEach(b => b.classList.remove('active'));
+    const target = row.querySelector('.qty-option[data-val="' + val + '"]');
+    if (target) target.classList.add('active');
+    // 恢复「更多」文字
+    const customBtn = row.querySelector('.qty-option[data-val="custom"]');
+    if (customBtn && !customBtn.querySelector('.qty-custom-input')) {
+      customBtn.innerHTML = '更多';
+    }
+    selectedItems[idx].qty = parseInt(val);
+  }
+
+  // ========== 提交 ==========
+  const WEBHOOK_URL = 'https://1257899736-cuc4ne0i3f.ap-guangzhou.tencentscf.com';
+
+  async function submitForm() {
+    if (selectedItems.length === 0) return showToast('请至少选择一项物品');
+    const tripInfo = document.getElementById('tripInfo').value.trim();
+    if (!tripInfo) return showToast('请填写行程简述');
+
+    const itemsText = selectedItems.map(i => `• ${i.name} × ${i.qty}`).join('\n');
+    const remark = document.getElementById('remark').value.trim();
+
+    const payload = {
+      itemsText,
+      tripInfo,
+      remark,
+      time: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })
+    };
+
+    try {
+      const btn = document.querySelector('.submit-btn');
+      btn.disabled = true; btn.textContent = '通知中...';
+
+      const resp = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(buildWeComMsg(payload))
+      });
+      const result = await resp.json();
+
+      if (result.errcode === 0) {
+        showToast('提交成功！专员将尽快联系您');
+        resetForm();
+      } else {
+        showToast('提交失败，请稍后重试');
+        btn.disabled = false; btn.textContent = '通知专员';
+      }
+    } catch(e) {
+      showToast('网络异常，请检查配置');
+      console.error(e);
+      const btn = document.querySelector('.submit-btn');
+      btn.disabled = false; btn.textContent = '通知专员';
+    }
+  }
+
+  function buildWeComMsg(p) {
+    const extra = p.remark ? '\n📋 备注：' + p.remark : '';
+    const text =
+`【境外差旅服务申请】
+━━━━━━━━━━━━━━
+📦 申请物品：
+${p.itemsText}
+━━━━━━━━━━━━━━
+✈️ ${p.tripInfo}${extra}
+━━━━━━━━━━━━━━
+⏰ 申请时间：${p.time}`;
+    return { msgtype: 'text', text: { content: text } };
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function resetForm() {
+    document.querySelectorAll('.svc-item input').forEach(cb => {
+      cb.checked = false; cb.closest('.svc-item').classList.remove('selected');
+    });
+    selectedItems = [];
+    renderSelectedList();
+    document.getElementById('tripInfo').value = '';
+    document.getElementById('remark').value = '';
+    const btn = document.querySelector('.submit-btn');
+    btn.disabled = false; btn.textContent = '通知专员';
+  }
+</script>
+</body>
+</html>

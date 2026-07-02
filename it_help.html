@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>更多服务 - 8000VIP服务</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background-color: #F0EAE4;
+      min-height: 100dvh;
+      color: #333;
+      overscroll-behavior: none;
+      padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
+    }
+
+    /* ===== 问题列表 ===== */
+    .qa-section {
+      padding: 4px 14px 8px;
+    }
+
+    /* ===== 问题卡片网格 ===== */
+    .qa-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    /* 卡片区圆角容器：撑起层次感 */
+    .qa-wrap {
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 2px 14px rgba(45,40,35,0.06);
+    }
+
+    .qa-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: #F7F3ED;
+      border: 1px solid rgba(196,176,154,0.22);
+      border-radius: 11px;
+      padding: 10px 8px 9px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      min-height: 52px;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .qa-card:active {
+      transform: scale(0.96);
+      background: #FFFDF5;
+      border-color: #D4A84C;
+    }
+
+    @media (hover: hover) {
+      .qa-card:hover {
+        border-color: #C4B09A;
+        box-shadow: 0 2px 10px rgba(60,50,40,0.08);
+        transform: translateY(-1px);
+      }
+    }
+
+    .qa-card-icon {
+      font-size: 18px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .qa-card-text {
+      font-size: 12px;
+      color: #3A3530;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    /* ===== 表单区域 ===== */
+    .form-section {
+      margin: 4px 16px 24px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 26px 20px;
+      box-shadow: 0 1px 8px rgba(60,50,40,0.06);
+      padding-bottom: max(26px, env(safe-area-inset-bottom, 26px));
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .form-header h2 {
+      font-size: 17px;
+      color: #3A3530;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .form-header p {
+      font-size: 12px;
+      color: #AAA499;
+      margin-top: 6px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #77726A;
+      margin-bottom: 7px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 13px 15px;
+      border: 1.5px solid #E5DED6;
+      border-radius: 10px;
+      font-size: 16px;
+      color: #333;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      outline: none;
+      font-family: inherit;
+      background: #FAF8F5;
+      -webkit-appearance: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: #C4B09A;
+      box-shadow: 0 0 0 3px rgba(196,176,154,0.12);
+      background: #fff;
+    }
+
+    .form-group textarea {
+      min-height: 90px;
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    /* ===== 文本框 wrapper（承载边框样式）===== */
+    .textarea-wrapper {
+      position: relative;
+      padding: 13px 14px;
+      border: 1.5px solid #E5DED6;
+      border-radius: 10px;
+      background: #FAF8F5;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      min-height: 180px;
+    }
+
+    .textarea-wrapper:focus-within {
+      border-color: #C4B09A;
+      box-shadow: 0 0 0 3px rgba(196,176,154,0.12);
+      background: #fff;
+    }
+
+    .textarea-wrapper textarea {
+      width: 100%;
+      min-height: 150px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+      line-height: 1.6;
+      font-family: inherit;
+      resize: vertical;
+      outline: none;
+      display: block;
+      position: relative;
+      z-index: 2;
+      -webkit-appearance: none;
+    }
+
+    /* ===== 浮层引导提示 ===== */
+    .guide-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 13px 14px;
+      pointer-events: none;
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: #C4B09A;
+      background: transparent;
+      border-radius: 10px;
+      overflow: hidden;
+      z-index: 1;
+      transition: opacity 0.2s ease;
+    }
+    .guide-overlay.hidden { display: none; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #3A3D4A 0%, #2D303B 100%);
+      color: #D4A84C;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 2px;
+      min-height: 50px;
+      -webkit-tap-highlight-color: transparent;
+      margin-top: 4px;
+    }
+
+    .submit-btn:active {
+      opacity: 0.85;
+      transform: scale(0.98);
+    }
+    .submit-btn:hover {
+      box-shadow: 0 4px 16px rgba(45,48,59,0.3);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: max(20px, env(safe-area-inset-top, 20px));
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #fff;
+      padding: 12px 22px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      font-size: 14px;
+      z-index: 1000;
+      transition: transform 0.35s cubic-bezier(0.68,-0.55,0.265,1.55);
+      white-space: nowrap;
+      max-width: calc(100vw - 40px);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success { color: #52c41a; border-left: 4px solid #52c41a; }
+    .toast.error { color: #ff4d4f; border-left: 4px solid #ff4d4f; }
+
+    /* 页脚 */
+    .footer {
+      text-align: center;
+      padding: 8px 20px max(20px, env(safe-area-inset-bottom, 20px));
+      color: #BBB5AA;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== 桌面端 ===== */
+    @media (min-width: 768px) {
+      .page-wrap { max-width: 520px; margin: 0 auto; }
+      .qa-grid { gap: 10px; }
+      .qa-card { padding: 12px 10px 11px; min-height: 58px; }
+      .qa-card-icon { font-size: 20px; }
+      .qa-card-text { font-size: 13px; }
+    }
+
+    /* ===== iPhone SE / 小屏 ===== */
+    @media (max-width: 374px) {
+      .qa-section { padding: 2px 8px 6px; }
+      .qa-grid { gap: 6px; }
+      .qa-card { padding: 8px 6px 7px; min-height: 46px; border-radius: 9px; }
+      .qa-card-icon { font-size: 16px; }
+      .qa-card-text { font-size: 11px; }
+      .form-section { margin: 4px 10px 20px; padding: 22px 16px; }
+    }
+
+    /* ===== 大屏手机 ===== */
+    @media (min-width: 390px) and (max-width: 767px) {}
+
+    /* ===== 横屏 ===== */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .qa-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .qa-card { padding: 7px 6px; min-height: 42px; border-radius: 8px; }
+      .qa-card-icon { font-size: 15px; }
+      .qa-card-text { font-size: 10.5px; }
+      .form-section { margin-bottom: 10px; padding: 18px 16px; }
+    }
+
+    input[type="text"], textarea, select { -webkit-appearance: none; }
+  </style>
+</head>
+<body>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="page-wrap">
+
+    <!-- 问题列表 -->
+    <section class="qa-section">
+      <div class="qa-wrap">
+      <div class="qa-grid">
+        <div class="qa-card" data-q="经常被垃圾邮件骚扰？" data-placeholder="例如：每天收到约___封垃圾邮件，主要来自___，使用的是___邮箱（Outlook/foxmail/QQ邮箱）|例如：希望设置过滤规则/黑名单/白名单|例如：已尝试过___（拉黑/举报），但效果不明显，希望彻底屏蔽某类发件人">
+          <span class="qa-card-icon">📧</span>
+          <span class="qa-card-text">垃圾邮件骚扰</span>
+        </div>
+        <div class="qa-card" data-q="想在Rooms上登陆自己的腾讯会议账号？" data-placeholder="例如：腾讯会议账号是___（手机号/邮箱）， Rooms 设备编号/位置在___|例如：之前登录过别人的账号，现在想切换回自己的|例如：希望以后默认登录自己的账号，避免再次被切换">
+          <span class="qa-card-icon">🎥</span>
+          <span class="qa-card-text">Rooms 登录会议</span>
+        </div>
+        <div class="qa-card" data-q="手机丢失了怎么保护隐私数据安全？" data-placeholder="例如：手机品牌型号___，是否开启了查找我的 iPhone / 查找设备|例如：需要远程擦除数据/冻结微信和邮箱/修改重要密码|例如：手机里是否有公司敏感资料或二步验证 app，需优先处理">
+          <span class="qa-card-icon">📱</span>
+          <span class="qa-card-text">手机丢失保护</span>
+        </div>
+        <div class="qa-card" data-q="想注册一个美国的Apple ID？" data-placeholder="例如：主要用于下载___（美区 App Store 应用），已有美区支付方式吗|例如：没有/有 Visa/Mastercard 信用卡|例如：是否需要协助绑定手机号/验证邮箱以完成注册">
+          <span class="qa-card-icon">🍎</span>
+          <span class="qa-card-text">注册美区 Apple ID</span>
+        </div>
+        <div class="qa-card" data-q="需要创建Teams、Zoom账号？" data-placeholder="例如：需要创建 ___（Teams/Zoom/两者都要）账号，用途是___（会议/协作/培训）|例如：用公司邮箱还是个人邮箱注册|例如：是否需要会议录制权限/外部人员入会设置">
+          <span class="qa-card-icon">💼</span>
+          <span class="qa-card-text">创建 Teams/Zoom</span>
+        </div>
+        <div class="qa-card" data-q="经常忘记密码，怎么安全备忘？" data-placeholder="例如：目前密码记在哪里（笔记本/浏览器/脑子里），大约有___个重要账号|例如：希望推荐密码管理工具（1Password/Bitwarden/苹果钥匙串）|例如：是否遇到过账号被盗/验证码泄露等情况">
+          <span class="qa-card-icon">🔐</span>
+          <span class="qa-card-text">密码安全管理</span>
+        </div>
+        <div class="qa-card" data-q="显示器怎么调整可以更护眼？" data-placeholder="例如：显示器品牌型号___，每天使用约___小时|例如：眼睛容易干/酸/疲劳，希望调整亮度/色温/防蓝光/字体大小|例如：是否为双屏/笔记本外接，希望统一调成护眼参数">
+          <span class="qa-card-icon">🖥️</span>
+          <span class="qa-card-text">显示器护眼调整</span>
+        </div>
+        <div class="qa-card" data-q="想在Mac电脑上安装Windows系统？" data-placeholder="例如：Mac 型号___，硬盘容量___GB，剩余空间约___GB|例如：需要安装 Windows 10 还是 Windows 11，主要用于___（办公/特定软件/游戏）|例如：是否需保留 macOS 双系统启动/数据备份后再装">
+          <span class="qa-card-icon">⬛</span>
+          <span class="qa-card-text">Mac 装 Windows</span>
+        </div>
+        <div class="qa-card" data-q="办公桌设备线路需要整理？" data-placeholder="例如：桌面设备有___（电脑/显示器/音箱/台灯/充电器等）|例如：线路杂乱影响美观/经常绊到/想用理线槽/魔术贴/升降桌走线孔|例如：桌下是否有插线板/走线孔，希望整体隐藏不外露">
+          <span class="qa-card-icon">🔌</span>
+          <span class="qa-card-text">桌面线缆整理</span>
+        </div>
+        <div class="qa-card" data-q="旧设备怎么卖出最有价值？" data-placeholder="例如：设备是___（品牌型号），购买时间___，成色___（全新/99新/9成新）|例如：是否有原包装盒/配件齐全/在保，期望回收渠道（闲鱼/爱回收/以旧换新）|例如：是否需协助数据彻底清除/导出照片后再回收">
+          <span class="qa-card-icon">💰</span>
+          <span class="qa-card-text">旧设备出售</span>
+        </div>
+        <div class="qa-card" data-q="" data-placeholder="" style="border-style: dashed; opacity: 0.55;">
+          <span class="qa-card-icon">➕</span>
+          <span class="qa-card-text" style="color: #999;">其他 IT 需求</span>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- 表单 -->
+    <section class="form-section" id="formSection">
+      <div class="form-header">
+        <h2>提交需求</h2>
+        <p>专员将在收到后尽快联系您</p>
+      </div>
+      <form id="applyForm">
+        <div class="form-group">
+          <label for="description">描述您的需求 *</label>
+          <div class="textarea-wrapper">
+            <textarea id="description" name="description" required></textarea>
+            <div class="guide-overlay" id="guideOverlay">👆 点击上方问题卡片，或直接描述您的 IT 需求</div>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">通知专员</button>
+      </form>
+    </section>
+
+    <footer class="footer">
+      8000VIP 服务 · 您的 24 小时 IT 私人助理
+    </footer>
+
+  </div>
+
+  <script>
+    // SCF 函数地址（部署后替换）
+    const WEBHOOK_URL = 'https://1257899736-f2sibmscad.ap-guangzhou.tencentcf.com';
+
+    let selectedQuestion = '';
+
+    function fixViewportHeight() {
+      document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
+    }
+    fixViewportHeight();
+    window.addEventListener('resize', fixViewportHeight);
+    window.addEventListener('orientationchange', () => setTimeout(fixViewportHeight, 300));
+
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'toast ' + type + ' show';
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    const descField = document.getElementById('description');
+    const guideOverlay = document.getElementById('guideOverlay');
+    const DEFAULT_GUIDE = '👆 点击上方问题卡片，或直接描述您的 IT 需求';
+
+    function setDefaultGuide() {
+      guideOverlay.innerHTML = DEFAULT_GUIDE;
+    }
+
+    // 浮层引导：有值或 focus 时隐藏
+    descField.addEventListener('focus', () => {
+      guideOverlay.classList.add('hidden');
+    });
+    descField.addEventListener('input', () => {
+      guideOverlay.classList.add('hidden');
+    });
+    descField.addEventListener('blur', () => {
+      if (!descField.value.trim()) {
+        if (!guideOverlay.innerHTML || !guideOverlay.textContent || guideOverlay.textContent === DEFAULT_GUIDE) {
+          setDefaultGuide();
+        }
+        guideOverlay.classList.remove('hidden');
+      }
+    });
+
+    // 问题卡片点击 → 显示浮层引导（非实体）
+    document.querySelectorAll('.qa-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const q = card.dataset.q;
+        const placeholder = card.dataset.placeholder || '';
+        if (!q) return;
+
+        selectedQuestion = q;
+
+        // 高亮当前选中的
+        document.querySelectorAll('.qa-card').forEach(c => {
+          c.style.borderColor = '';
+          c.style.background = '';
+        });
+        card.style.borderColor = '#D4A84C';
+        card.style.background = '#FFFDF5';
+
+        // 浮层显示：标题 + 引导提示词
+        const guideHtml = (placeholder || '').replace(/\|/g, '<br>');
+        guideOverlay.innerHTML = '<strong style="color:#D4A84C;">' + q + '</strong><br><br>' + guideHtml;
+        guideOverlay.classList.remove('hidden');
+
+        // 清空已有内容
+        descField.value = '';
+
+        // 平滑滚动到表单
+        document.getElementById('formSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+
+    // 表单提交
+    document.getElementById('applyForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const desc = descField.value.trim();
+
+      if (!desc || desc.length < 3) {
+        showToast('请描述您的需求', 'error');
+        return;
+      }
+
+      if (!WEBHOOK_URL) {
+        showToast('服务尚未就绪，请联系管理员', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '通知中...';
+
+      try {
+        const timeStr = new Date().toLocaleString('zh-CN');
+        const questionLine = selectedQuestion ? '\n> **选中问题：**' + selectedQuestion.replace(/\?+$/, '') : '';
+
+        const message = {
+          msgtype: 'markdown',
+          markdown: {
+            content:
+              '**🆘 更多服务新咨询**\n\n' +
+              '> **需求描述：**\n> ' + desc.replace(/\n/g, '\n> ') + (selectedQuestion ? '\n> \n> **选中问题：**' + selectedQuestion.replace(/\?+$/, '') : '') + '\n' +
+              '> **时间：**' + timeStr + '\n\n' +
+              '---\n' +
+              '<font color="info">8000VIP 更多服务</font>'
+          }
+        };
+
+        const res = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(message)
+        });
+        const result = await res.json();
+
+        if (result.errcode === 0 || result.errno === 0) {
+          showToast('✅ 提交成功！专员会尽快联系您');
+          document.getElementById('applyForm').reset();
+          setDefaultGuide();
+          guideOverlay.classList.remove('hidden');
+          selectedQuestion = '';
+          document.querySelectorAll('.qa-card').forEach(c => {
+            c.style.borderColor = '';
+            c.style.background = '';
+          });
+        } else {
+          showToast(result.errmsg || '提交失败，请稍后重试', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('网络错误，请检查连接后重试', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '通知专员';
+      }
+    });
+  </script>
+</body>
+</html>
